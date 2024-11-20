@@ -5,20 +5,19 @@ import { CategoryCard } from "@/components/CategoryCard";
 import { categories, Career } from "@/lib/careers";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const handleCareerClick = (career: Career) => {
     setSelectedCareer(career);
   };
 
   const handleCategoryClick = (categoryId: string) => {
-    navigate(`/search?category=${categoryId}`);
+    setSelectedCategory(categoryId === selectedCategory ? undefined : categoryId);
     toast({
       title: "Category selected",
       description: "Showing careers in " + categories.find(c => c.id === categoryId)?.title,
@@ -57,10 +56,15 @@ const Index = () => {
 
         {/* Careers Grid */}
         <section>
-          <h2 className="text-2xl font-bold mb-6">Featured Careers</h2>
+          <h2 className="text-2xl font-bold mb-6">
+            {selectedCategory 
+              ? `Careers in ${categories.find(c => c.id === selectedCategory)?.title}`
+              : "Featured Careers"}
+          </h2>
           <CareerGrid
             onCareerClick={handleCareerClick}
             filter={searchQuery}
+            category={selectedCategory}
           />
         </section>
 
