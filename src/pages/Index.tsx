@@ -30,12 +30,18 @@ const Index = () => {
           <p className="text-xl text-spotify-lightgray max-w-2xl mx-auto">
             Explore different careers, understand what it takes to succeed, and find your perfect profession.
           </p>
-          <Button 
+          <Button
             onClick={() => navigate("/search")}
-            className="bg-spotify-green hover:bg-spotify-green/90 text-lg px-8 py-6 h-auto"
+            className="relative inline-flex items-center px-8 py-8 text-lg font-semibold text-black bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 hover:from-pink-500 hover:to-yellow-400 rounded-xl shadow-[0_4px_20px_rgba(255,0,0,0.6)] transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-pink-400"
           >
-            <Search className="mr-2 h-5 w-5" />
-            Explore Careers
+            <span
+              className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 blur-md opacity-80 rounded-xl animate-pulse"
+              aria-hidden="true"
+            ></span>
+            <span className="relative z-10 flex items-center">
+              <Search className="mr-3 h-6 w-6 text-white" />
+              <span className="text-white">Explore Careers</span>
+            </span>
           </Button>
         </div>
 
