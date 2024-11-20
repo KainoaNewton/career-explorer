@@ -1,27 +1,22 @@
 import { useState } from "react";
-import { SearchBar } from "@/components/SearchBar";
-import { CareerGrid } from "@/components/CareerGrid";
+import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "@/components/CategoryCard";
+import { CareerGrid } from "@/components/CareerGrid";
 import { categories, Career } from "@/lib/careers";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
-  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleCareerClick = (career: Career) => {
     setSelectedCareer(career);
   };
 
   const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategory(categoryId === selectedCategory ? undefined : categoryId);
-    toast({
-      title: "Category selected",
-      description: "Showing careers in " + categories.find(c => c.id === categoryId)?.title,
-    });
+    navigate(`/search?category=${categoryId}`);
   };
 
   return (
@@ -35,7 +30,13 @@ const Index = () => {
           <p className="text-xl text-spotify-lightgray max-w-2xl mx-auto">
             Explore different careers, understand what it takes to succeed, and find your perfect profession.
           </p>
-          <SearchBar onSearch={setSearchQuery} />
+          <Button 
+            onClick={() => navigate("/search")}
+            className="bg-spotify-green hover:bg-spotify-green/90 text-lg px-8 py-6 h-auto"
+          >
+            <Search className="mr-2 h-5 w-5" />
+            Explore Careers
+          </Button>
         </div>
 
         {/* Categories */}
@@ -56,15 +57,9 @@ const Index = () => {
 
         {/* Careers Grid */}
         <section>
-          <h2 className="text-2xl font-bold mb-6">
-            {selectedCategory 
-              ? `Careers in ${categories.find(c => c.id === selectedCategory)?.title}`
-              : "Featured Careers"}
-          </h2>
+          <h2 className="text-2xl font-bold mb-6">Featured Careers</h2>
           <CareerGrid
             onCareerClick={handleCareerClick}
-            filter={searchQuery}
-            category={selectedCategory}
           />
         </section>
 
@@ -79,7 +74,9 @@ const Index = () => {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Education Required</h3>
-                    <p className="text-spotify-lightgray">{selectedCareer.yearsOfEducation} years of higher education</p>
+                    <p className="text-spotify-lightgray">
+                      {selectedCareer.yearsOfEducation} years of higher education
+                    </p>
                   </div>
                   
                   <div>
