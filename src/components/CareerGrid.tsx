@@ -5,11 +5,14 @@ interface CareerGridProps {
   onCareerClick: (career: Career) => void;
   filter?: string;
   categories?: string[];
+  minYears?: number;
+  maxYears?: number;
 }
 
-export function CareerGrid({ onCareerClick, filter, categories }: CareerGridProps) {
+export function CareerGrid({ onCareerClick, filter, categories, minYears, maxYears }: CareerGridProps) {
   const filteredCareers = careers.filter((career) => {
     if (categories && categories.length > 0 && !categories.includes(career.category)) return false;
+    if (minYears !== undefined && maxYears !== undefined && (career.yearsOfEducation < minYears || career.yearsOfEducation > maxYears)) return false;
     if (filter) {
       return career.title.toLowerCase().includes(filter.toLowerCase()) ||
              career.description.toLowerCase().includes(filter.toLowerCase());
