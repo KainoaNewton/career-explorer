@@ -4,12 +4,12 @@ import { CareerCard } from "./CareerCard";
 interface CareerGridProps {
   onCareerClick: (career: Career) => void;
   filter?: string;
-  category?: string;
+  categories?: string[];
 }
 
-export function CareerGrid({ onCareerClick, filter, category }: CareerGridProps) {
+export function CareerGrid({ onCareerClick, filter, categories }: CareerGridProps) {
   const filteredCareers = careers.filter((career) => {
-    if (category && career.category !== category) return false;
+    if (categories && categories.length > 0 && !categories.includes(career.category)) return false;
     if (filter) {
       return career.title.toLowerCase().includes(filter.toLowerCase()) ||
              career.description.toLowerCase().includes(filter.toLowerCase());

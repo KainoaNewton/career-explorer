@@ -1,21 +1,35 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Career, careers, categories } from "@/lib/careers";
 import { CareerGrid } from "@/components/CareerGrid";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, Home } from "lucide-react";
+
+const EDUCATION_LEVELS = [
+  { id: "bachelors", label: "Bachelor's Degree", years: 4 },
+  { id: "masters", label: "Master's Degree", years: 6 },
+  { id: "doctorate", label: "Doctorate", years: 8 },
+];
+
+const SALARY_PRESETS = [
+  { label: "Entry Level", min: 30000, max: 50000 },
+  { label: "Mid Level", min: 50000, max: 80000 },
+  { label: "Senior Level", min: 80000, max: 120000 },
+  { label: "Executive", min: 120000, max: 200000 },
+];
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
-  const [salaryRange, setSalaryRange] = useState([0, 200000]);
-  const [educationYears, setEducationYears] = useState([0, 8]);
-
-  const initialCategory = searchParams.get("category");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    searchParams.get("category") ? [searchParams.get("category")!] : []
+  );
+  const [selectedEducation, setSelectedEducation] = useState<string[]>([]);
+  const [salaryMin, setSalaryMin] = useState("");
+  const [salaryMax, setSalaryMax] = useState("");
 
   const handleCareerClick = (career: Career) => {
     setSelectedCareer(career);
@@ -27,11 +41,29 @@ const Search = () => {
     setSearchParams(params);
   };
 
+  const toggleCategory = (categoryId: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  const handleSalaryPreset = (min: number, max: number) => {
+    setSalaryMin(min.toString());
+    setSalaryMax(max.toString());
+  };
+
   return (
     <div className="min-h-screen bg-spotify-black text-white">
       {/* Search Header */}
       <div className="sticky top-0 z-10 bg-spotify-black/95 backdrop-blur-sm border-b border-white/10 p-4">
         <div className="max-w-7xl mx-auto flex gap-4">
+          <Link to="/">
+            <Button variant="ghost" size="icon" className="mr-2">
+              <Home className="h-5 w-5" />
+            </Button>
+          </Link>
           <div className="relative flex-1">
             <Input
               className="w-full bg-spotify-darkgray border-none pl-10"
@@ -57,13 +89,9 @@ const Search = () => {
               {categories.map((category) => (
                 <button
                   key={category.id}
-                  onClick={() => {
-                    const params = new URLSearchParams(searchParams);
-                    params.set("category", category.id);
-                    setSearchParams(params);
-                  }}
+                  onClick={() => toggleCategory(category.id)}
                   className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-                    category.id === searchParams.get("category")
+                    selectedCategories.includes(category.id)
                       ? "bg-spotify-green text-white"
                       : "hover:bg-white/10"
                   }`}
@@ -75,32 +103,59 @@ const Search = () => {
           </div>
 
           <div className="bg-spotify-darkgray rounded-lg p-4 space-y-4">
-            <h3 className="text-lg font-bold">Education (Years)</h3>
-            <Slider
-              defaultValue={educationYears}
-              max={8}
-              step={1}
-              onValueChange={setEducationYears}
-              className="w-full"
-            />
-            <div className="flex justify-between text-sm text-spotify-lightgray">
-              <span>{educationYears[0]} years</span>
-              <span>{educationYears[1]} years</span>
+            <h3 className="text-lg font-bold">Education Level</h3>
+            <div className="space-y-2">
+              {EDUCATION_LEVELS.map((level) => (
+                <button
+                  key={level.id}
+                  onClick={() => setSelectedEducation(prev => 
+                    prev.includes(level.id) 
+                      ? prev.filter(id => id !== level.id)
+                      : [...prev, level.id]
+                  )}
+                  className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                    selectedEducation.includes(level.id)
+                      ? "bg-spotify-green text-white"
+                      : "hover:bg-white/10"
+                  }`}
+                >
+                  {level.label}
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="bg-spotify-darkgray rounded-lg p-4 space-y-4">
             <h3 className="text-lg font-bold">Salary Range</h3>
-            <Slider
-              defaultValue={salaryRange}
-              max={200000}
-              step={10000}
-              onValueChange={setSalaryRange}
-              className="w-full"
-            />
-            <div className="flex justify-between text-sm text-spotify-lightgray">
-              <span>${salaryRange[0].toLocaleString()}</span>
-              <span>${salaryRange[1].toLocaleString()}</span>
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  placeholder="Min"
+                  value={salaryMin}
+                  onChange={(e) => setSalaryMin(e.target.value)}
+                  className="bg-spotify-black"
+                />
+                <Input
+                  type="number"
+                  placeholder="Max"
+                  value={salaryMax}
+                  onChange={(e) => setSalaryMax(e.target.value)}
+                  className="bg-spotify-black"
+                />
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-spotify-lightgray">Presets:</p>
+                {SALARY_PRESETS.map((preset, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSalaryPreset(preset.min, preset.max)}
+                    className="w-full text-left px-3 py-2 rounded-md hover:bg-white/10 text-sm"
+                  >
+                    {preset.label} (${preset.min.toLocaleString()} - ${preset.max.toLocaleString()})
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -110,7 +165,7 @@ const Search = () => {
           <CareerGrid
             onCareerClick={handleCareerClick}
             filter={searchParams.get("q") || ""}
-            category={searchParams.get("category") || undefined}
+            categories={selectedCategories}
           />
         </div>
       </div>
