@@ -1,29 +1,40 @@
-import { Slider } from "@/components/ui/slider";
-
 interface EducationFilterProps {
-  minYears: number;
-  maxYears: number;
-  onChange: (min: number, max: number) => void;
+  selectedRanges: string[];
+  onChange: (ranges: string[]) => void;
 }
 
-export function EducationFilter({ minYears, maxYears, onChange }: EducationFilterProps) {
+const EDUCATION_RANGES = [
+  { id: "1-2", label: "1-2 years" },
+  { id: "3-4", label: "3-4 years" },
+  { id: "5-6", label: "5-6 years" },
+  { id: "7+", label: "7+ years" },
+];
+
+export function EducationFilter({ selectedRanges, onChange }: EducationFilterProps) {
+  const toggleRange = (rangeId: string) => {
+    const newRanges = selectedRanges.includes(rangeId)
+      ? selectedRanges.filter(id => id !== rangeId)
+      : [...selectedRanges, rangeId];
+    onChange(newRanges);
+  };
+
   return (
     <div className="bg-spotify-darkgray rounded-lg p-4 space-y-4">
       <h3 className="text-lg font-bold">Years of Education</h3>
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>{minYears} years</span>
-            <span>{maxYears} years</span>
-          </div>
-          <Slider
-            defaultValue={[minYears, maxYears]}
-            max={12}
-            min={0}
-            step={1}
-            onValueChange={(values) => onChange(values[0], values[1])}
-          />
-        </div>
+      <div className="space-y-2">
+        {EDUCATION_RANGES.map((range) => (
+          <button
+            key={range.id}
+            onClick={() => toggleRange(range.id)}
+            className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+              selectedRanges.includes(range.id)
+                ? "bg-spotify-green text-white"
+                : "hover:bg-white/10"
+            }`}
+          >
+            {range.label}
+          </button>
+        ))}
       </div>
     </div>
   );

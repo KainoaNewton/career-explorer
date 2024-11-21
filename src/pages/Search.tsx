@@ -5,7 +5,7 @@ import { CareerGrid } from "@/components/CareerGrid";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search as SearchIcon, Home } from "lucide-react";
+import { Search as SearchIcon, Home, X } from "lucide-react";
 import { CategoryFilter } from "@/components/search/CategoryFilter";
 import { EducationFilter } from "@/components/search/EducationFilter";
 import { SalaryFilter } from "@/components/search/SalaryFilter";
@@ -17,8 +17,7 @@ const Search = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     searchParams.get("category") ? [searchParams.get("category")!] : []
   );
-  const [minYears, setMinYears] = useState(0);
-  const [maxYears, setMaxYears] = useState(8);
+  const [selectedYearRanges, setSelectedYearRanges] = useState<string[]>([]);
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
 
@@ -40,14 +39,18 @@ const Search = () => {
     );
   };
 
-  const handleEducationChange = (min: number, max: number) => {
-    setMinYears(min);
-    setMaxYears(max);
-  };
-
   const handleSalaryChange = (min: string, max: string) => {
     setSalaryMin(min);
     setSalaryMax(max);
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setSelectedYearRanges([]);
+    setSalaryMin("");
+    setSalaryMax("");
+    setSearchQuery("");
+    setSearchParams(new URLSearchParams());
   };
 
   return (
@@ -79,14 +82,25 @@ const Search = () => {
       <div className="max-w-7xl mx-auto p-6 grid grid-cols-4 gap-6">
         {/* Filters Sidebar */}
         <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Filters</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="text-spotify-lightgray hover:text-white"
+            >
+              <X className="h-4 w-4 mr-2" />
+              Clear filters
+            </Button>
+          </div>
           <CategoryFilter
             selectedCategories={selectedCategories}
             onToggleCategory={toggleCategory}
           />
           <EducationFilter
-            minYears={minYears}
-            maxYears={maxYears}
-            onChange={handleEducationChange}
+            selectedRanges={selectedYearRanges}
+            onChange={setSelectedYearRanges}
           />
           <SalaryFilter
             salaryMin={salaryMin}
@@ -101,6 +115,9 @@ const Search = () => {
             onCareerClick={handleCareerClick}
             filter={searchParams.get("q") || ""}
             categories={selectedCategories}
+            selectedYearRanges={selectedYearRanges}
+            salaryMin={salaryMin}
+            salaryMax={salaryMax}
           />
         </div>
       </div>

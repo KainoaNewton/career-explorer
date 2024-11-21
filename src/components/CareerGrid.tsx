@@ -5,18 +5,55 @@ interface CareerGridProps {
   onCareerClick: (career: Career) => void;
   filter?: string;
   categories?: string[];
-  minYears?: number;
-  maxYears?: number;
+  selectedYearRanges?: string[];
+  salaryMin?: string;
+  salaryMax?: string;
 }
 
-export function CareerGrid({ onCareerClick, filter, categories, minYears, maxYears }: CareerGridProps) {
+export function CareerGrid({ 
+  onCareerClick, 
+  filter, 
+  categories,
+  selectedYearRanges,
+  salaryMin,
+  salaryMax
+}: CareerGridProps) {
   const filteredCareers = careers.filter((career) => {
+    // Category filter
     if (categories && categories.length > 0 && !categories.includes(career.category)) return false;
-    if (minYears !== undefined && maxYears !== undefined && (career.yearsOfEducation < minYears || career.yearsOfEducation > maxYears)) return false;
+    
+    // Years of education filter
+    if (selectedYearRanges && selectedYearRanges.length > 0) {
+      const yearsMatch = selectedYearRanges.some(range => {
+        switch (range) {
+          case "1-2":
+            return career.yearsOfEducation >= 1 && career.yearsOfEducation <= 2;
+          case "3-4":
+            return career.yearsOfEducation >= 3 && career.yearsOfEducation <= 4;
+          case "5-6":
+            return career.yearsOfEducation >= 5 && career.yearsOfEducation <= 6;
+          case "7+":
+            return career.yearsOfEducation >= 7;
+          default:
+            return false;
+        }
+      });
+      if (!yearsMatch) return false;
+    }
+
+    // Salary filter
+    if (salaryMin || salaryMax) {
+      const careerSalary = parseInt(career.averageSalary.replace(/[^0-9]/g, ''));
+      if (salaryMin && careerSalary < parseInt(salaryMin)) return false;
+      if (salaryMax && careerSalary > parseInt(salaryMax)) return false;
+    }
+
+    // Text search filter
     if (filter) {
       return career.title.toLowerCase().includes(filter.toLowerCase()) ||
              career.description.toLowerCase().includes(filter.toLowerCase());
     }
+    
     return true;
   });
 
