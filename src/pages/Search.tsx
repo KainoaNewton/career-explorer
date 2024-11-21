@@ -107,25 +107,22 @@ const Search = () => {
           <Button onClick={handleSearch} className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 hover:from-pink-500 hover:to-yellow-400 text-white">
             Search
           </Button>
-          {/* Only show the filter button on mobile */}
-          <div className="lg:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Filter className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[300px] bg-[#1A1F2C] border-r border-white/10 p-6">
-                <Filters />
-              </SheetContent>
-            </Sheet>
-          </div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden">
+                <Filter className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] bg-[#1A1F2C] border-r border-white/10 p-6">
+              <Filters />
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Filters Sidebar - Desktop */}
-        <div className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
+        <div className="hidden lg:block space-y-6">
           <Filters />
         </div>
 
