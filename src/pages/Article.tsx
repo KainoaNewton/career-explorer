@@ -12,7 +12,7 @@ const Article = () => {
       <div className="min-h-screen bg-spotify-black text-white p-6">
         <div className="max-w-4xl mx-auto">
           <Link to="/">
-            <Button variant="ghost" className="text-white hover:text-spotify-green">
+            <Button variant="ghost" className="text-white hover:text-white hover:bg-spotify-darkgray">
               <Home className="mr-2 h-4 w-4" />
               Back to Home
             </Button>
@@ -28,12 +28,12 @@ const Article = () => {
   return (
     <div className="min-h-screen bg-spotify-black text-white p-6">
       <div className="max-w-4xl mx-auto">
-        <Link to="/">
-          <Button variant="ghost" className="text-white hover:text-spotify-green">
-            <Home className="mr-2 h-4 w-4" />
-            Back to Home
-          </Button>
-        </Link>
+          <Link to="/">
+            <Button variant="ghost" className="text-white hover:text-white hover:bg-spotify-darkgray">
+              <Home className="mr-2 h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
         
         <article className="mt-8">
           <div className="space-y-4">

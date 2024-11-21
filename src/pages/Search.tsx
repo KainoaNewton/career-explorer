@@ -85,12 +85,12 @@ const Search = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1A1F2C] to-spotify-black text-white">
+    <div className="min-h-screen  text-white">
       {/* Search Header */}
-      <div className="sticky top-0 z-10 bg-[#1A1F2C]/95 backdrop-blur-sm border-b border-white/10 p-4">
+      <div className="sticky top-0 z-10 bg-spotify-black border-b border-white/10 p-4">
         <div className="max-w-7xl mx-auto flex gap-4 items-center">
           <Link to="/">
-            <Button variant="ghost" size="icon" className="mr-2">
+            <Button variant="ghost" size="icon" className="mr-2 hover:text-white hover:bg-spotify-darkgray">
               <Home className="h-5 w-5" />
             </Button>
           </Link>
