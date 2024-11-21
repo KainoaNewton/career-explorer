@@ -5,10 +5,11 @@ import { CareerGrid } from "@/components/CareerGrid";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search as SearchIcon, Home, X } from "lucide-react";
+import { Search as SearchIcon, Home, X, Filter } from "lucide-react";
 import { CategoryFilter } from "@/components/search/CategoryFilter";
 import { EducationFilter } from "@/components/search/EducationFilter";
 import { SalaryFilter } from "@/components/search/SalaryFilter";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,11 +54,41 @@ const Search = () => {
     setSearchParams(new URLSearchParams());
   };
 
+  const Filters = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold">Filters</h2>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearFilters}
+          className="text-white/70 hover:text-white"
+        >
+          <X className="h-4 w-4 mr-2" />
+          Clear filters
+        </Button>
+      </div>
+      <CategoryFilter
+        selectedCategories={selectedCategories}
+        onToggleCategory={toggleCategory}
+      />
+      <EducationFilter
+        selectedRanges={selectedYearRanges}
+        onChange={setSelectedYearRanges}
+      />
+      <SalaryFilter
+        salaryMin={salaryMin}
+        salaryMax={salaryMax}
+        onSalaryChange={handleSalaryChange}
+      />
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-spotify-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#1A1F2C] to-spotify-black text-white">
       {/* Search Header */}
-      <div className="sticky top-0 z-10 bg-spotify-black/95 backdrop-blur-sm border-b border-white/10 p-4">
-        <div className="max-w-7xl mx-auto flex gap-4">
+      <div className="sticky top-0 z-10 bg-[#1A1F2C]/95 backdrop-blur-sm border-b border-white/10 p-4">
+        <div className="max-w-7xl mx-auto flex gap-4 items-center">
           <Link to="/">
             <Button variant="ghost" size="icon" className="mr-2">
               <Home className="h-5 w-5" />
@@ -65,52 +96,38 @@ const Search = () => {
           </Link>
           <div className="relative flex-1">
             <Input
-              className="w-full bg-spotify-darkgray border-none pl-10"
+              className="w-full bg-white/10 border-none pl-10"
               placeholder="Search careers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-spotify-lightgray h-4 w-4" />
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70 h-4 w-4" />
           </div>
-          <Button onClick={handleSearch} className="bg-spotify-green hover:bg-spotify-green/90">
+          <Button onClick={handleSearch} className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 hover:from-pink-500 hover:to-yellow-400 text-white">
             Search
           </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden">
+                <Filter className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] bg-[#1A1F2C] border-r border-white/10 p-6">
+              <Filters />
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6 grid grid-cols-4 gap-6">
-        {/* Filters Sidebar */}
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">Filters</h2>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearFilters}
-              className="text-spotify-lightgray hover:text-white"
-            >
-              <X className="h-4 w-4 mr-2" />
-              Clear filters
-            </Button>
-          </div>
-          <CategoryFilter
-            selectedCategories={selectedCategories}
-            onToggleCategory={toggleCategory}
-          />
-          <EducationFilter
-            selectedRanges={selectedYearRanges}
-            onChange={setSelectedYearRanges}
-          />
-          <SalaryFilter
-            salaryMin={salaryMin}
-            salaryMax={salaryMax}
-            onSalaryChange={handleSalaryChange}
-          />
+      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Filters Sidebar - Desktop */}
+        <div className="hidden lg:block space-y-6">
+          <Filters />
         </div>
 
         {/* Career Grid */}
-        <div className="col-span-3">
+        <div className="lg:col-span-3">
           <CareerGrid
             onCareerClick={handleCareerClick}
             filter={searchParams.get("q") || ""}
@@ -124,28 +141,30 @@ const Search = () => {
 
       {/* Career Detail Dialog */}
       <Dialog open={!!selectedCareer} onOpenChange={() => setSelectedCareer(null)}>
-        <DialogContent className="bg-spotify-darkgray text-white border-none max-w-2xl">
+        <DialogContent className="bg-[#1A1F2C] text-white border-none max-w-2xl">
           {selectedCareer && (
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold">{selectedCareer.title}</h2>
-              <p className="text-spotify-lightgray">{selectedCareer.description}</p>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
+                {selectedCareer.title}
+              </h2>
+              <p className="text-white/70">{selectedCareer.description}</p>
               
               <div className="space-y-4">
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Education Required</h3>
-                  <p className="text-spotify-lightgray">
+                  <p className="text-white/70">
                     {selectedCareer.yearsOfEducation} years of higher education
                   </p>
                 </div>
                 
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Average Salary</h3>
-                  <p className="text-spotify-lightgray">{selectedCareer.averageSalary}</p>
+                  <p className="text-white/70">{selectedCareer.averageSalary}</p>
                 </div>
                 
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Daily Tasks</h3>
-                  <ul className="list-disc pl-5 text-spotify-lightgray">
+                  <ul className="list-disc pl-5 text-white/70">
                     {selectedCareer.dailyTasks.map((task, index) => (
                       <li key={index}>{task}</li>
                     ))}
@@ -158,7 +177,7 @@ const Search = () => {
                     {selectedCareer.requiredSkills.map((skill, index) => (
                       <span
                         key={index}
-                        className="bg-spotify-green/20 text-spotify-green px-3 py-1 rounded-full text-sm"
+                        className="bg-white/10 text-white px-3 py-1 rounded-full text-sm"
                       >
                         {skill}
                       </span>
