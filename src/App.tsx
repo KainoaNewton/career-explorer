@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Search from "./pages/Search";
 import Article from "./pages/Article";
+import Articles from "./pages/Articles";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/search" element={<Search />} />
           <Route path="/article/:slug" element={<Article />} />
+          <Route path="/articles" element={<Articles />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

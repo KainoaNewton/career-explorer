@@ -78,6 +78,7 @@ const Index = () => {
             <Button
               variant="link"
               className="text-spotify-green hover:text-white transition-colors"
+              onClick={() => navigate("/articles")}
             >
               View all articles
             </Button>
