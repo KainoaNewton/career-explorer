@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "@/components/CategoryCard";
 import { CareerGrid } from "@/components/CareerGrid";
+import { ArticleGrid } from "@/components/ArticleGrid";
 import { categories, Career } from "@/lib/careers";
+import { articles } from "@/lib/articles";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -67,6 +69,20 @@ const Index = () => {
           <CareerGrid
             onCareerClick={handleCareerClick}
           />
+        </section>
+
+        {/* Articles Section */}
+        <section>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Career Insights & Stories</h2>
+            <Button
+              variant="link"
+              className="text-spotify-green hover:text-white transition-colors"
+            >
+              View all articles
+            </Button>
+          </div>
+          <ArticleGrid articles={articles} />
         </section>
 
         {/* Career Detail Dialog */}
