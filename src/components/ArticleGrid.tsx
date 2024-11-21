@@ -2,18 +2,22 @@ import { Article } from "@/lib/articles";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ArticleGridProps {
   articles: Article[];
 }
 
 export function ArticleGrid({ articles }: ArticleGridProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {articles.map((article) => (
         <Card 
           key={article.id}
           className="relative bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10 hover:from-pink-500/20 hover:to-yellow-400/20 border-none transition-all hover:scale-[1.02] cursor-pointer animate-scale-in overflow-hidden group"
+          onClick={() => navigate(`/article/${article.slug}`)}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 via-red-500/20 to-pink-500/20 blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
           <CardHeader className="relative z-10">
