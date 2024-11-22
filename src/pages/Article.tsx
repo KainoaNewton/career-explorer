@@ -1,22 +1,29 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { articles } from "@/lib/articles";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 
 const Article = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const article = articles.find((a) => a.slug === slug);
+
+  const handleBack = () => {
+    navigate(-1); // This will go back to the previous page in history
+  };
 
   if (!article) {
     return (
       <div className="min-h-screen bg-spotify-black text-white p-6">
         <div className="max-w-4xl mx-auto">
-          <Link to="/">
-            <Button variant="ghost" className="text-white hover:text-white hover:bg-spotify-darkgray">
-              <Home className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
+          <Button 
+            variant="ghost" 
+            className="text-white hover:text-white hover:bg-spotify-darkgray"
+            onClick={handleBack}
+          >
+            <Home className="mr-2 h-4 w-4" />
+            Go Back
+          </Button>
           <div className="text-center mt-20">
             <h1 className="text-2xl font-bold">Article not found</h1>
           </div>
@@ -28,12 +35,14 @@ const Article = () => {
   return (
     <div className="min-h-screen bg-spotify-black text-white p-6">
       <div className="max-w-4xl mx-auto">
-          <Link to="/">
-            <Button variant="ghost" className="text-white hover:text-white hover:bg-spotify-darkgray">
-              <Home className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
+        <Button 
+          variant="ghost" 
+          className="text-white hover:text-white hover:bg-spotify-darkgray"
+          onClick={handleBack}
+        >
+          <Home className="mr-2 h-4 w-4" />
+          Go Back
+        </Button>
         
         <article className="mt-8">
           <div className="space-y-4">
@@ -53,7 +62,6 @@ const Article = () => {
               {article.excerpt}
             </p>
             
-            {/* This is where the full article content would go */}
             <div className="mt-8 prose prose-invert max-w-none">
               <p className="text-white/80">
                 This is a placeholder for the full article content. In a real application, 
