@@ -10,7 +10,16 @@ import Article from "@/pages/Article";
 import Articles from "@/pages/Articles";
 import Admin from "@/pages/Admin";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0, // Data is considered stale immediately
+      refetchOnWindowFocus: true, // Refetch when window gains focus
+      refetchOnMount: true, // Refetch when component mounts
+      refetchOnReconnect: true, // Refetch when reconnecting
+    },
+  },
+});
 
 function App() {
   return (
