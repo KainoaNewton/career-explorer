@@ -9,6 +9,8 @@ export interface Career {
   description: string;
   dailyTasks: string[];
   requiredSkills: string[];
+  salaryMin?: string;
+  salaryMax?: string;
 }
 
 export const categories = [
@@ -41,7 +43,8 @@ export const categories = [
 export async function getCareers() {
   const { data, error } = await supabase
     .from('careers')
-    .select('*');
+    .select('*')
+    .order('title', { ascending: true });
   
   if (error) throw error;
   return data as Career[];

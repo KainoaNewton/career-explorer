@@ -4,6 +4,7 @@ export interface Article {
   id: string;
   title: string;
   excerpt: string;
+  content: string;
   date: string;
   readTime: string;
   category: string;
@@ -13,7 +14,8 @@ export interface Article {
 export async function getArticles() {
   const { data, error } = await supabase
     .from('articles')
-    .select('*');
+    .select('*')
+    .order('date', { ascending: false });
   
   if (error) throw error;
   return data as Article[];
