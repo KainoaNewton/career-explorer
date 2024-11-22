@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Search from "./pages/Search";
 import Article from "./pages/Article";
 import Articles from "./pages/Articles";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/search" element={<Search />} />
           <Route path="/article/:slug" element={<Article />} />
           <Route path="/articles" element={<Articles />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
