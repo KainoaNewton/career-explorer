@@ -32,6 +32,19 @@ const Index = () => {
     navigate(`/search?category=${categoryId}`);
   };
 
+  // Ensure dailyTasks and requiredSkills are arrays
+  const parsedDailyTasks = selectedCareer?.dailyTasks 
+    ? Array.isArray(selectedCareer.dailyTasks) 
+      ? selectedCareer.dailyTasks 
+      : JSON.parse(selectedCareer.dailyTasks as string)
+    : [];
+
+  const parsedRequiredSkills = selectedCareer?.requiredSkills
+    ? Array.isArray(selectedCareer.requiredSkills)
+      ? selectedCareer.requiredSkills
+      : JSON.parse(selectedCareer.requiredSkills as string)
+    : [];
+
   return (
     <div className="min-h-screen bg-spotify-black text-white p-6">
       <main className="max-w-7xl mx-auto space-y-12">
@@ -123,7 +136,7 @@ const Index = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Daily Tasks</h3>
                     <ul className="list-disc pl-5 text-spotify-lightgray">
-                      {selectedCareer.dailyTasks.map((task, index) => (
+                      {parsedDailyTasks.map((task: string, index: number) => (
                         <li key={index}>{task}</li>
                       ))}
                     </ul>
@@ -132,7 +145,7 @@ const Index = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Required Skills</h3>
                     <div className="flex flex-wrap gap-2">
-                      {selectedCareer.requiredSkills.map((skill, index) => (
+                      {parsedRequiredSkills.map((skill: string, index: number) => (
                         <span
                           key={index}
                           className="bg-spotify-green/20 text-spotify-green px-3 py-1 rounded-full text-sm"
