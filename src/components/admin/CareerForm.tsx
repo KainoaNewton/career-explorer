@@ -6,14 +6,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
+import { categories } from "@/lib/careers";
+import { CategoryManager } from "./CategoryManager";
+import { useState } from "react";
 
 const careerSchema = z.object({
   title: z.string().min(1, "Title is required"),
   category: z.string().min(1, "Category is required"),
   yearsOfEducation: z.number().min(0),
-  averageSalary: z.string().min(1, "Salary is required"),
+  salaryMin: z.string().min(1, "Minimum salary is required"),
+  salaryMax: z.string().min(1, "Maximum salary is required"),
   description: z.string().min(1, "Description is required"),
   dailyTasks: z.string().transform((str) => JSON.parse(str)),
   requiredSkills: z.string().transform((str) => JSON.parse(str)),
@@ -21,13 +26,16 @@ const careerSchema = z.object({
 
 export const CareerForm = () => {
   const { toast } = useToast();
+  const [availableCategories, setAvailableCategories] = useState(categories.map(c => c.id));
+  
   const form = useForm({
     resolver: zodResolver(careerSchema),
     defaultValues: {
       title: "",
       category: "",
       yearsOfEducation: 0,
-      averageSalary: "",
+      salaryMin: "",
+      salaryMax: "",
       description: "",
       dailyTasks: "[]",
       requiredSkills: "[]",
@@ -36,7 +44,11 @@ export const CareerForm = () => {
 
   const onSubmit = async (values: z.infer<typeof careerSchema>) => {
     try {
-      const { error } = await supabase.from("careers").insert([values]);
+      const averageSalary = `$${values.salaryMin} - $${values.salaryMax}`;
+      const { error } = await supabase.from("careers").insert([{
+        ...values,
+        averageSalary,
+      }]);
       if (error) throw error;
       toast({
         title: "Career added successfully",
@@ -49,6 +61,10 @@ export const CareerForm = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleAddCategory = (newCategory: string) => {
+    setAvailableCategories([...availableCategories, newCategory]);
   };
 
   return (
@@ -67,19 +83,34 @@ export const CareerForm = () => {
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-white">Category</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g. Technology" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
-              </FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="bg-spotify-black text-white border-spotify-lightgray">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="bg-spotify-black text-white border-spotify-lightgray">
+                  {availableCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <CategoryManager onCategoryAdd={handleAddCategory} />
+
         <FormField
           control={form.control}
           name="yearsOfEducation"
@@ -99,19 +130,36 @@ export const CareerForm = () => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="averageSalary"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-white">Average Salary</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g. $80,000 - $120,000" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="salaryMin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">Minimum Salary</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 50000" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="salaryMax"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-white">Maximum Salary</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 80000" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="description"
@@ -125,6 +173,7 @@ export const CareerForm = () => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="dailyTasks"
@@ -132,12 +181,21 @@ export const CareerForm = () => {
             <FormItem>
               <FormLabel className="text-white">Daily Tasks (JSON array)</FormLabel>
               <FormControl>
-                <Textarea placeholder='e.g. ["Write code", "Review pull requests", "Attend meetings"]' className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Textarea 
+                  placeholder={`Example:
+["Write and review code",
+"Attend team meetings",
+"Debug software issues",
+"Collaborate with designers"]`}
+                  className="bg-spotify-black text-white border-spotify-lightgray min-h-[150px]" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="requiredSkills"
@@ -145,12 +203,22 @@ export const CareerForm = () => {
             <FormItem>
               <FormLabel className="text-white">Required Skills (JSON array)</FormLabel>
               <FormControl>
-                <Textarea placeholder='e.g. ["JavaScript", "React", "Node.js"]' className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Textarea 
+                  placeholder={`Example:
+["JavaScript",
+"React",
+"Node.js",
+"Git",
+"Problem Solving"]`}
+                  className="bg-spotify-black text-white border-spotify-lightgray min-h-[150px]" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <Button type="submit" className="w-full bg-spotify-green hover:bg-spotify-green/90" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

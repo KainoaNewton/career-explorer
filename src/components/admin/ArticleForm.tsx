@@ -8,6 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
+import { RichTextEditor } from "./RichTextEditor";
+import { useState } from "react";
 
 const articleSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -19,6 +21,8 @@ const articleSchema = z.object({
 
 export const ArticleForm = () => {
   const { toast } = useToast();
+  const [content, setContent] = useState("");
+  
   const form = useForm({
     resolver: zodResolver(articleSchema),
     defaultValues: {
@@ -34,6 +38,7 @@ export const ArticleForm = () => {
     try {
       const { error } = await supabase.from("articles").insert([{
         ...values,
+        content,
         date: new Date().toISOString(),
       }]);
       if (error) throw error;
@@ -41,6 +46,7 @@ export const ArticleForm = () => {
         title: "Article added successfully",
       });
       form.reset();
+      setContent("");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -73,7 +79,7 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Excerpt</FormLabel>
               <FormControl>
-                <Textarea placeholder="Brief summary of the article" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Textarea placeholder="A brief summary that will appear in the article list" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -86,7 +92,7 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Category</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Career Advice" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Input placeholder="e.g. Career Advice, Industry News" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,7 +105,7 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Slug</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. 10-tips-for-career-success" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Input placeholder="e.g. 10-tips-for-career-success (URL-friendly version of the title)" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -118,6 +124,12 @@ export const ArticleForm = () => {
             </FormItem>
           )}
         />
+
+        <FormItem>
+          <FormLabel className="text-white">Article Content</FormLabel>
+          <RichTextEditor content={content} onChange={setContent} />
+        </FormItem>
+
         <Button type="submit" className="w-full bg-spotify-green hover:bg-spotify-green/90" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
