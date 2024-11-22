@@ -3,15 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "@/components/CategoryCard";
 import { CareerGrid } from "@/components/CareerGrid";
 import { ArticleGrid } from "@/components/ArticleGrid";
-import { categories, Career } from "@/lib/careers";
-import { articles } from "@/lib/articles";
+import { categories, getCareers, Career } from "@/lib/careers";
+import { getArticles } from "@/lib/articles";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const Index = () => {
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
   const navigate = useNavigate();
+
+  const { data: careers, isLoading: careersLoading } = useQuery({
+    queryKey: ['careers'],
+    queryFn: getCareers
+  });
+
+  const { data: articles, isLoading: articlesLoading } = useQuery({
+    queryKey: ['articles'],
+    queryFn: getArticles
+  });
 
   const handleCareerClick = (career: Career) => {
     setSelectedCareer(career);
@@ -67,6 +78,8 @@ const Index = () => {
         <section>
           <h2 className="text-2xl font-bold mb-6">Featured Careers</h2>
           <CareerGrid
+            careers={careers || []}
+            isLoading={careersLoading}
             onCareerClick={handleCareerClick}
           />
         </section>
@@ -83,7 +96,7 @@ const Index = () => {
               View all articles
             </Button>
           </div>
-          <ArticleGrid articles={articles} />
+          <ArticleGrid articles={articles || []} isLoading={articlesLoading} />
         </section>
 
         {/* Career Detail Dialog */}

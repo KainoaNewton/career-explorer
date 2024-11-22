@@ -6,10 +6,15 @@ import { useNavigate } from "react-router-dom";
 
 interface ArticleGridProps {
   articles: Article[];
+  isLoading?: boolean;
 }
 
-export function ArticleGrid({ articles }: ArticleGridProps) {
+export function ArticleGrid({ articles, isLoading }: ArticleGridProps) {
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return <div>Loading articles...</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

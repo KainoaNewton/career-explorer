@@ -1,16 +1,26 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { articles } from "@/lib/articles";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
+import { getArticleBySlug } from "@/lib/articles";
+import { useQuery } from "@tanstack/react-query";
 
 const Article = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const article = articles.find((a) => a.slug === slug);
+  
+  const { data: article, isLoading } = useQuery({
+    queryKey: ['article', slug],
+    queryFn: () => getArticleBySlug(slug || ''),
+    enabled: !!slug
+  });
 
   const handleBack = () => {
-    navigate(-1); // This will go back to the previous page in history
+    navigate(-1);
   };
+
+  if (isLoading) {
+    return <div>Loading article...</div>;
+  }
 
   if (!article) {
     return (

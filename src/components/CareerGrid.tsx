@@ -1,7 +1,9 @@
-import { Career, careers } from "@/lib/careers";
+import { Career, categories } from "@/lib/careers";
 import { CareerCard } from "./CareerCard";
 
 interface CareerGridProps {
+  careers: Career[];
+  isLoading?: boolean;
   onCareerClick: (career: Career) => void;
   filter?: string;
   categories?: string[];
@@ -11,6 +13,8 @@ interface CareerGridProps {
 }
 
 export function CareerGrid({ 
+  careers,
+  isLoading,
   onCareerClick, 
   filter, 
   categories,
@@ -18,6 +22,10 @@ export function CareerGrid({
   salaryMin,
   salaryMax
 }: CareerGridProps) {
+  if (isLoading) {
+    return <div>Loading careers...</div>;
+  }
+
   const filteredCareers = careers.filter((career) => {
     // Category filter
     if (categories && categories.length > 0 && !categories.includes(career.category)) return false;
