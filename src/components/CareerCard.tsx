@@ -7,6 +7,19 @@ interface CareerCardProps {
 }
 
 export function CareerCard({ career, onClick }: CareerCardProps) {
+  // Format salary range
+  const formatSalary = (salary: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(parseInt(salary));
+  };
+
+  const salaryRange = career.salaryMin && career.salaryMax
+    ? `${formatSalary(career.salaryMin)} - ${formatSalary(career.salaryMax)}`
+    : "Salary not specified";
+
   return (
     <div
       onClick={onClick}
@@ -20,7 +33,7 @@ export function CareerCard({ career, onClick }: CareerCardProps) {
         </div>
         <div className="flex items-center gap-2">
           <Briefcase className="h-4 w-4" />
-          <span>{career.averageSalary}</span>
+          <span>{salaryRange}</span>
         </div>
       </div>
       <p className="text-spotify-lightgray line-clamp-2">{career.description}</p>
