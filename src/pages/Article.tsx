@@ -72,12 +72,7 @@ const Article = () => {
               {article.excerpt}
             </p>
             
-            <div className="mt-8 prose prose-invert max-w-none">
-              <p className="text-white/80">
-                This is a placeholder for the full article content. In a real application, 
-                you would fetch the complete article content from your backend or CMS.
-              </p>
-            </div>
+            <div className="mt-8 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: article.content }} />
           </div>
         </article>
       </div>
