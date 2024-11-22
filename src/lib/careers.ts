@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { toast } from "@/components/ui/use-toast";
 
 export interface Career {
   id: string;
@@ -41,22 +42,56 @@ export const categories = [
 ];
 
 export async function getCareers() {
-  const { data, error } = await supabase
-    .from('careers')
-    .select('*')
-    .order('title', { ascending: true });
-  
-  if (error) throw error;
-  return data as Career[];
+  try {
+    const { data, error } = await supabase
+      .from('careers')
+      .select('*')
+      .order('title', { ascending: true });
+    
+    if (error) {
+      toast({
+        title: "Error fetching careers",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+
+    if (!data) {
+      return [];
+    }
+
+    return data as Career[];
+  } catch (error) {
+    console.error('Error fetching careers:', error);
+    throw error;
+  }
 }
 
 export async function getCareerById(id: string) {
-  const { data, error } = await supabase
-    .from('careers')
-    .select('*')
-    .eq('id', id)
-    .single();
-  
-  if (error) throw error;
-  return data as Career;
+  try {
+    const { data, error } = await supabase
+      .from('careers')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (error) {
+      toast({
+        title: "Error fetching career",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+
+    if (!data) {
+      throw new Error('Career not found');
+    }
+
+    return data as Career;
+  } catch (error) {
+    console.error('Error fetching career:', error);
+    throw error;
+  }
 }

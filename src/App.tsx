@@ -13,15 +13,12 @@ import Admin from "@/pages/Admin";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity, // Keep data fresh indefinitely
-      cacheTime: Infinity, // Never delete cache
+      staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+      gcTime: 1000 * 60 * 60, // Cache is kept for 1 hour
       retry: 3, // Retry failed requests 3 times
       refetchOnWindowFocus: false, // Don't refetch on window focus
       refetchOnMount: true, // Refetch when component mounts
       refetchOnReconnect: false, // Don't refetch on reconnect
-      onError: (error) => {
-        console.error('Query Error:', error);
-      },
     },
   },
 });

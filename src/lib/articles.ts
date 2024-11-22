@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { toast } from "@/components/ui/use-toast";
 
 export interface Article {
   id: string;
@@ -12,22 +13,56 @@ export interface Article {
 }
 
 export async function getArticles() {
-  const { data, error } = await supabase
-    .from('articles')
-    .select('*')
-    .order('date', { ascending: false });
-  
-  if (error) throw error;
-  return data as Article[];
+  try {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .order('date', { ascending: false });
+    
+    if (error) {
+      toast({
+        title: "Error fetching articles",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+
+    if (!data) {
+      return [];
+    }
+
+    return data as Article[];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    throw error;
+  }
 }
 
 export async function getArticleBySlug(slug: string) {
-  const { data, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('slug', slug)
-    .single();
-  
-  if (error) throw error;
-  return data as Article;
+  try {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+    
+    if (error) {
+      toast({
+        title: "Error fetching article",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+
+    if (!data) {
+      throw new Error('Article not found');
+    }
+
+    return data as Article;
+  } catch (error) {
+    console.error('Error fetching article:', error);
+    throw error;
+  }
 }
