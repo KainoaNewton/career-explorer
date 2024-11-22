@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { Career } from "@/lib/careers";
+import { Career, getCareers } from "@/lib/careers";
 import { CareerGrid } from "@/components/CareerGrid";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { CategoryFilter } from "@/components/search/CategoryFilter";
 import { EducationFilter } from "@/components/search/EducationFilter";
 import { SalaryFilter } from "@/components/search/SalaryFilter";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useQuery } from "@tanstack/react-query";
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,6 +24,11 @@ const Search = () => {
   );
   const [salaryMin, setSalaryMin] = useState(searchParams.get("salaryMin") || "");
   const [salaryMax, setSalaryMax] = useState(searchParams.get("salaryMax") || "");
+
+  const { data: careers = [], isLoading } = useQuery({
+    queryKey: ['careers'],
+    queryFn: getCareers
+  });
 
   const updateSearchParams = (updates: Record<string, string | string[] | null>) => {
     const params = new URLSearchParams(searchParams);
@@ -155,6 +161,8 @@ const Search = () => {
         {/* Career Grid */}
         <div className="lg:col-span-3">
           <CareerGrid
+            careers={careers}
+            isLoading={isLoading}
             onCareerClick={handleCareerClick}
             filter={searchParams.get("q") || ""}
             categories={selectedCategories}
