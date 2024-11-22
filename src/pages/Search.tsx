@@ -16,33 +16,59 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    searchParams.get("category") ? [searchParams.get("category")!] : []
+    searchParams.get("categories") ? searchParams.get("categories")!.split(",") : []
   );
-  const [selectedYearRanges, setSelectedYearRanges] = useState<string[]>([]);
-  const [salaryMin, setSalaryMin] = useState("");
-  const [salaryMax, setSalaryMax] = useState("");
+  const [selectedYearRanges, setSelectedYearRanges] = useState<string[]>(
+    searchParams.get("education") ? searchParams.get("education")!.split(",") : []
+  );
+  const [salaryMin, setSalaryMin] = useState(searchParams.get("salaryMin") || "");
+  const [salaryMax, setSalaryMax] = useState(searchParams.get("salaryMax") || "");
+
+  const updateSearchParams = (updates: Record<string, string | string[] | null>) => {
+    const params = new URLSearchParams(searchParams);
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || (Array.isArray(value) && value.length === 0)) {
+        params.delete(key);
+      } else if (Array.isArray(value)) {
+        params.set(key, value.join(','));
+      } else {
+        params.set(key, value);
+      }
+    });
+    
+    setSearchParams(params);
+  };
 
   const handleCareerClick = (career: Career) => {
     setSelectedCareer(career);
   };
 
   const handleSearch = () => {
-    const params = new URLSearchParams(searchParams);
-    params.set("q", searchQuery);
-    setSearchParams(params);
+    updateSearchParams({ q: searchQuery || null });
   };
 
   const toggleCategory = (categoryId: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(categoryId) 
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
-    );
+    const newCategories = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter(id => id !== categoryId)
+      : [...selectedCategories, categoryId];
+    
+    setSelectedCategories(newCategories);
+    updateSearchParams({ categories: newCategories });
+  };
+
+  const handleEducationChange = (ranges: string[]) => {
+    setSelectedYearRanges(ranges);
+    updateSearchParams({ education: ranges });
   };
 
   const handleSalaryChange = (min: string, max: string) => {
     setSalaryMin(min);
     setSalaryMax(max);
+    updateSearchParams({
+      salaryMin: min || null,
+      salaryMax: max || null
+    });
   };
 
   const clearFilters = () => {
@@ -74,7 +100,7 @@ const Search = () => {
       />
       <EducationFilter
         selectedRanges={selectedYearRanges}
-        onChange={setSelectedYearRanges}
+        onChange={handleEducationChange}
       />
       <SalaryFilter
         salaryMin={salaryMin}
@@ -85,7 +111,7 @@ const Search = () => {
   );
 
   return (
-    <div className="min-h-screen  text-white">
+    <div className="min-h-screen text-white">
       {/* Search Header */}
       <div className="sticky top-0 z-10 bg-spotify-black border-b border-white/10 p-4">
         <div className="max-w-7xl mx-auto flex gap-4 items-center">
