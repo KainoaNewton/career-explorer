@@ -5,6 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminAuth } from "@/components/admin/AdminAuth";
 import { CareerForm } from "@/components/admin/CareerForm";
 import { ArticleForm } from "@/components/admin/ArticleForm";
+import { ManageArticles } from "@/components/admin/ManageArticles";
+import { ManageCareers } from "@/components/admin/ManageCareers";
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,21 +31,35 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="careers" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-spotify-darkgray">
-            <TabsTrigger value="careers" className="text-white data-[state=active]:bg-spotify-green">
+          <TabsList className="grid w-full grid-cols-4 bg-spotify-darkgray">
+            <TabsTrigger value="add-career" className="text-white data-[state=active]:bg-spotify-green">
               Add Career
             </TabsTrigger>
-            <TabsTrigger value="articles" className="text-white data-[state=active]:bg-spotify-green">
+            <TabsTrigger value="manage-careers" className="text-white data-[state=active]:bg-spotify-green">
+              Manage Careers
+            </TabsTrigger>
+            <TabsTrigger value="add-article" className="text-white data-[state=active]:bg-spotify-green">
               Add Article
+            </TabsTrigger>
+            <TabsTrigger value="manage-articles" className="text-white data-[state=active]:bg-spotify-green">
+              Manage Articles
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="careers" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
+          <TabsContent value="add-career" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
             <CareerForm />
           </TabsContent>
 
-          <TabsContent value="articles" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
+          <TabsContent value="manage-careers" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
+            <ManageCareers />
+          </TabsContent>
+
+          <TabsContent value="add-article" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
             <ArticleForm />
+          </TabsContent>
+
+          <TabsContent value="manage-articles" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
+            <ManageArticles />
           </TabsContent>
         </Tabs>
       </div>

@@ -66,3 +66,28 @@ export async function getArticleBySlug(slug: string) {
     throw error;
   }
 }
+
+export async function deleteArticle(id: string) {
+  try {
+    const { error } = await supabase
+      .from('articles')
+      .delete()
+      .eq('id', id);
+    
+    if (error) {
+      toast({
+        title: "Error deleting article",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+
+    toast({
+      title: "Article deleted successfully",
+    });
+  } catch (error) {
+    console.error('Error deleting article:', error);
+    throw error;
+  }
+}

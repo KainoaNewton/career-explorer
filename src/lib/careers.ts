@@ -95,3 +95,28 @@ export async function getCareerById(id: string) {
     throw error;
   }
 }
+
+export async function deleteCareer(id: string) {
+  try {
+    const { error } = await supabase
+      .from('careers')
+      .delete()
+      .eq('id', id);
+    
+    if (error) {
+      toast({
+        title: "Error deleting career",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw error;
+    }
+
+    toast({
+      title: "Career deleted successfully",
+    });
+  } catch (error) {
+    console.error('Error deleting career:', error);
+    throw error;
+  }
+}
