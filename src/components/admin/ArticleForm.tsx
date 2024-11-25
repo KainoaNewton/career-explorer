@@ -12,7 +12,7 @@ import { RichTextEditor } from "./RichTextEditor";
 import { useState } from "react";
 
 const articleSchema = z.object({
-  title: z.string().min(1, "Title is required").max(40, "Title must not exceed 40 characters"),
+  title: z.string().min(1, "Title is required"),
   excerpt: z.string().min(1, "Excerpt is required").max(130, "Excerpt must not exceed 130 characters"),
   category: z.string().min(1, "Category is required").max(16, "Category must not exceed 16 characters"),
   slug: z.string().min(1, "URL is required"),
@@ -64,14 +64,9 @@ export const ArticleForm = () => {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Title (max 40 characters)</FormLabel>
+              <FormLabel className="text-white">Title</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="e.g. 10 Tips for Career Success" 
-                  className="bg-spotify-black text-white border-spotify-lightgray" 
-                  maxLength={40}
-                  {...field} 
-                />
+                <Input placeholder="e.g. 10 Tips for Career Success" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
