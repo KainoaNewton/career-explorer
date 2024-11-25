@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { Loader2, Home } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 interface AdminAuthProps {
   onAuthenticated: (value: boolean) => void;
@@ -14,6 +15,7 @@ export const AdminAuth = ({ onAuthenticated }: AdminAuthProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +78,14 @@ export const AdminAuth = ({ onAuthenticated }: AdminAuthProps) => {
             )}
           </Button>
         </form>
+        <Button
+          variant="outline"
+          className="w-full bg-spotify-darkgray text-white hover:bg-spotify-darkgray/90 border-spotify-lightgray"
+          onClick={() => navigate("/")}
+        >
+          <Home className="mr-2 h-4 w-4" />
+          Back to Home
+        </Button>
       </div>
     </div>
   );

@@ -13,9 +13,9 @@ import { useState } from "react";
 
 const articleSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  excerpt: z.string().min(1, "Excerpt is required"),
-  category: z.string().min(1, "Category is required"),
-  slug: z.string().min(1, "Slug is required"),
+  excerpt: z.string().min(1, "Excerpt is required").max(130, "Excerpt must not exceed 130 characters"),
+  category: z.string().min(1, "Category is required").max(16, "Category must not exceed 16 characters"),
+  slug: z.string().min(1, "URL is required"),
   author: z.string().min(1, "Author is required"),
 });
 
@@ -77,7 +77,7 @@ export const ArticleForm = () => {
           name="excerpt"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Excerpt</FormLabel>
+              <FormLabel className="text-white">Excerpt (max 130 characters)</FormLabel>
               <FormControl>
                 <Textarea placeholder="A brief summary that will appear in the article list" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
@@ -90,9 +90,9 @@ export const ArticleForm = () => {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Category</FormLabel>
+              <FormLabel className="text-white">Category (max 16 characters)</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Career Advice, Industry News" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Input placeholder="e.g. Career Advice" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -116,7 +116,7 @@ export const ArticleForm = () => {
           name="slug"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Slug</FormLabel>
+              <FormLabel className="text-white">URL</FormLabel>
               <FormControl>
                 <Input placeholder="e.g. 10-tips-for-career-success (URL-friendly version of the title)" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
@@ -127,7 +127,11 @@ export const ArticleForm = () => {
 
         <FormItem>
           <FormLabel className="text-white">Article Content</FormLabel>
-          <RichTextEditor content={content} onChange={setContent} />
+          <RichTextEditor 
+            content={content} 
+            onChange={setContent} 
+            placeholder="Recommended to paste from Google Docs or other text editor. Headers will look the same as normal text here."
+          />
         </FormItem>
 
         <Button type="submit" className="w-full bg-spotify-green hover:bg-spotify-green/90" disabled={form.formState.isSubmitting}>
