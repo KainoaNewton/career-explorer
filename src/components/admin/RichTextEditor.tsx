@@ -3,6 +3,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import Image from '@tiptap/extension-image';
 import { 
   Bold, 
   Italic, 
@@ -16,7 +17,8 @@ import {
   Quote,
   AlignLeft,
   AlignCenter,
-  AlignRight
+  AlignRight,
+  Image as ImageIcon
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -39,6 +41,11 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
           class: 'text-blue-500 underline',
         },
       }),
+      Image.configure({
+        HTMLAttributes: {
+          class: 'max-w-full h-auto rounded-lg',
+        },
+      }),
       Underline,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
@@ -59,6 +66,13 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     const url = window.prompt('URL:');
     if (url) {
       editor?.chain().focus().setLink({ href: url }).run();
+    }
+  };
+
+  const addImage = () => {
+    const url = window.prompt('Image URL:');
+    if (url) {
+      editor?.chain().focus().setImage({ src: url }).run();
     }
   };
 
@@ -117,6 +131,13 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
           title="Add Link"
         >
           <LinkIcon className="w-4 h-4" />
+        </button>
+        <button
+          onClick={addImage}
+          className="p-2 rounded hover:bg-spotify-black"
+          title="Add Image"
+        >
+          <ImageIcon className="w-4 h-4" />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
