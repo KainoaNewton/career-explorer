@@ -16,7 +16,7 @@ const articleSchema = z.object({
   excerpt: z.string().min(1, "Excerpt is required"),
   category: z.string().min(1, "Category is required"),
   slug: z.string().min(1, "Slug is required"),
-  readTime: z.string().min(1, "Read time is required"),
+  author: z.string().min(1, "Author is required"),
 });
 
 export const ArticleForm = () => {
@@ -30,7 +30,7 @@ export const ArticleForm = () => {
       excerpt: "",
       category: "",
       slug: "",
-      readTime: "",
+      author: "",
     },
   });
 
@@ -100,12 +100,12 @@ export const ArticleForm = () => {
         />
         <FormField
           control={form.control}
-          name="slug"
+          name="author"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Slug</FormLabel>
+              <FormLabel className="text-white">Author</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. 10-tips-for-career-success (URL-friendly version of the title)" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Input placeholder="e.g. John Doe" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -113,12 +113,12 @@ export const ArticleForm = () => {
         />
         <FormField
           control={form.control}
-          name="readTime"
+          name="slug"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Read Time</FormLabel>
+              <FormLabel className="text-white">Slug</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. 5 min read" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Input placeholder="e.g. 10-tips-for-career-success (URL-friendly version of the title)" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

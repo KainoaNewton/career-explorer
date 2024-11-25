@@ -1,7 +1,7 @@
 import { Article } from "@/lib/articles";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, Clock } from "lucide-react";
+import { CalendarDays, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface ArticleGridProps {
@@ -36,8 +36,8 @@ export function ArticleGrid({ articles, isLoading }: ArticleGridProps) {
                   {new Date(article.date).toLocaleDateString()}
                 </div>
                 <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-1" />
-                  {article.readTime}
+                  <User className="w-4 h-4 mr-1" />
+                  {article.author}
                 </div>
               </div>
             </div>

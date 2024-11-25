@@ -7,7 +7,7 @@ export interface Article {
   excerpt: string;
   content: string;
   date: string;
-  readTime: string;
+  author: string;
   category: string;
   slug: string;
 }

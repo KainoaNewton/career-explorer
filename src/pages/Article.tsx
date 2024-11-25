@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { Home, User } from "lucide-react";
 import { getArticleBySlug } from "@/lib/articles";
 import { useQuery } from "@tanstack/react-query";
 
@@ -60,7 +60,10 @@ const Article = () => {
               <span className="text-sm text-white/70">{article.category}</span>
               <div className="flex items-center space-x-4 text-white/70 text-sm">
                 <span>{new Date(article.date).toLocaleDateString()}</span>
-                <span>{article.readTime}</span>
+                <div className="flex items-center">
+                  <User className="w-4 h-4 mr-1" />
+                  <span>{article.author}</span>
+                </div>
               </div>
             </div>
             

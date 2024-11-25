@@ -6,11 +6,16 @@ import {
   Bold, 
   Italic, 
   Underline as UnderlineIcon, 
-  Heading2, 
+  Heading1,
+  Heading2,
+  Heading3,
   Link as LinkIcon,
   List,
   ListOrdered,
-  Quote
+  Quote,
+  AlignLeft,
+  AlignCenter,
+  AlignRight
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -21,7 +26,11 @@ interface RichTextEditorProps {
 export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3]
+        }
+      }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
@@ -72,11 +81,25 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           <UnderlineIcon className="w-4 h-4" />
         </button>
         <button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          className={`p-2 rounded ${editor.isActive('heading', { level: 1 }) ? 'bg-spotify-green' : 'hover:bg-spotify-black'}`}
+          title="Heading 1"
+        >
+          <Heading1 className="w-4 h-4" />
+        </button>
+        <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={`p-2 rounded ${editor.isActive('heading') ? 'bg-spotify-green' : 'hover:bg-spotify-black'}`}
-          title="Heading"
+          className={`p-2 rounded ${editor.isActive('heading', { level: 2 }) ? 'bg-spotify-green' : 'hover:bg-spotify-black'}`}
+          title="Heading 2"
         >
           <Heading2 className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          className={`p-2 rounded ${editor.isActive('heading', { level: 3 }) ? 'bg-spotify-green' : 'hover:bg-spotify-black'}`}
+          title="Heading 3"
+        >
+          <Heading3 className="w-4 h-4" />
         </button>
         <button
           onClick={setLink}
@@ -105,6 +128,27 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           title="Quote"
         >
           <Quote className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={`p-2 rounded ${editor.isActive({ textAlign: 'left' }) ? 'bg-spotify-green' : 'hover:bg-spotify-black'}`}
+          title="Align Left"
+        >
+          <AlignLeft className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={`p-2 rounded ${editor.isActive({ textAlign: 'center' }) ? 'bg-spotify-green' : 'hover:bg-spotify-black'}`}
+          title="Align Center"
+        >
+          <AlignCenter className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={`p-2 rounded ${editor.isActive({ textAlign: 'right' }) ? 'bg-spotify-green' : 'hover:bg-spotify-black'}`}
+          title="Align Right"
+        >
+          <AlignRight className="w-4 h-4" />
         </button>
       </div>
       <EditorContent editor={editor} className="bg-spotify-black text-white p-4 min-h-[300px]" />
