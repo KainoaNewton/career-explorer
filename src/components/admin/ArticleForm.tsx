@@ -79,7 +79,12 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Excerpt (max 130 characters)</FormLabel>
               <FormControl>
-                <Textarea placeholder="A brief summary that will appear in the article list" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Textarea 
+                  placeholder="A brief summary that will appear in the article list" 
+                  className="bg-spotify-black text-white border-spotify-lightgray" 
+                  maxLength={130}
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,7 +97,12 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Category (max 16 characters)</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Career Advice" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Input 
+                  placeholder="e.g. Career Advice" 
+                  className="bg-spotify-black text-white border-spotify-lightgray" 
+                  maxLength={16}
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
