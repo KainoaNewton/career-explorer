@@ -9,7 +9,7 @@ interface RichTextEditorProps {
 export function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
   return (
     <Editor
-      apiKey="your-api-key" // You'll need to get a free API key from TinyMCE
+      apiKey="v94ivhx462ov6ba2o3e9garnpshvzs43zc2xl1ya73ejdgx4"
       value={content}
       onEditorChange={(newContent) => onChange(newContent)}
       init={{
