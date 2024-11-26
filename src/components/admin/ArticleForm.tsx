@@ -145,7 +145,7 @@ export const ArticleForm = () => {
           <RichTextEditor 
             content={content} 
             onChange={setContent} 
-            placeholder="Recommended to paste from Google Docs or other text editor. Headers will look the same as normal text here."
+            placeholder="Write your article content here..."
           />
         </FormItem>
 
