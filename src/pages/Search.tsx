@@ -120,7 +120,7 @@ const Search = () => {
     <div className="min-h-screen text-white">
       {/* Search Header */}
       <div className="sticky top-0 z-10 bg-spotify-black border-b border-white/10 p-4">
-        <div className="max-w-7xl mx-auto flex gap-4 items-center">
+        <div className="w-full px-4 flex gap-4 items-center">
           <Link to="/">
             <Button variant="ghost" size="icon" className="mr-2 hover:text-white hover:bg-spotify-darkgray">
               <Home className="h-5 w-5" />
@@ -152,7 +152,7 @@ const Search = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="w-full p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Filters Sidebar - Desktop */}
         <div className="hidden lg:block space-y-6">
           <Filters />

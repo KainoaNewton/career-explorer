@@ -30,7 +30,12 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     extensions: [
       StarterKit.configure({
         heading: {
-          levels: [1, 2, 3]
+          levels: [1, 2, 3],
+          HTMLAttributes: {
+            1: { class: 'text-4xl font-bold mb-4' },
+            2: { class: 'text-3xl font-bold mb-3' },
+            3: { class: 'text-2xl font-bold mb-2' },
+          },
         }
       }),
       Link.configure({
@@ -50,6 +55,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     },
     editorProps: {
       attributes: {
+        class: 'prose prose-invert max-w-none',
         placeholder: placeholder,
       },
     },
@@ -161,7 +167,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
           <AlignRight className="w-4 h-4" />
         </button>
       </div>
-      <EditorContent editor={editor} className="bg-spotify-black text-white p-4 min-h-[300px]" />
+      <EditorContent editor={editor} className="bg-spotify-black text-white p-4 min-h-[300px] prose prose-invert max-w-none" />
     </div>
   );
 }
