@@ -75,7 +75,10 @@ const Article = () => {
               {article.excerpt}
             </p>
             
-            <div className="mt-8 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: article.content }} />
+            <div 
+              className="mt-8 prose prose-invert max-w-none [&>*]:!font-size-revert [&>*]:!inherit-none" 
+              dangerouslySetInnerHTML={{ __html: article.content }} 
+            />
           </div>
         </article>
       </div>
