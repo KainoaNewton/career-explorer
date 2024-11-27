@@ -45,6 +45,9 @@ const Index = () => {
       : JSON.parse(selectedCareer.requiredSkills as string)
     : [];
 
+  // Get only the 3 latest articles
+  const latestArticles = articles ? articles.slice(0, 3) : [];
+
   return (
     <div className="min-h-screen bg-spotify-black text-white p-6">
       <main className="max-w-7xl mx-auto space-y-12">
@@ -109,7 +112,7 @@ const Index = () => {
               View all articles
             </Button>
           </div>
-          <ArticleGrid articles={articles || []} isLoading={articlesLoading} />
+          <ArticleGrid articles={latestArticles} isLoading={articlesLoading} />
         </section>
 
         {/* Career Detail Dialog */}
