@@ -38,11 +38,11 @@ export const ArticleForm = () => {
   useEffect(() => {
     const savedFormData = localStorage.getItem('articleFormData');
     const savedContent = localStorage.getItem('articleContent');
-    
+
     if (savedFormData) {
       form.reset(JSON.parse(savedFormData));
     }
-    
+
     if (savedContent) {
       setContent(savedContent);
     }
@@ -148,7 +148,7 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Author</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. John Doe" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
+                <Input placeholder="e.g. Kainoa Newton" className="bg-spotify-black text-white border-spotify-lightgray" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
