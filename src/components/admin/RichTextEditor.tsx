@@ -34,6 +34,24 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
             color: white;
             background-color: #121212;
           }
+          h1 {
+            font-size: 2.5em !important;
+            font-weight: 700 !important;
+            margin-bottom: 0.5em !important;
+            color: white !important;
+          }
+          h2 {
+            font-size: 2em !important;
+            font-weight: 600 !important;
+            margin-bottom: 0.5em !important;
+            color: white !important;
+          }
+          h3 {
+            font-size: 1.5em !important;
+            font-weight: 600 !important;
+            margin-bottom: 0.5em !important;
+            color: white !important;
+          }
         `
       }}
     />
