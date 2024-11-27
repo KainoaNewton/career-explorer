@@ -25,7 +25,8 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
           'imagetools'
         ],
         toolbar: 'undo redo | blocks | ' +
-          'bold italic forecolor | bullist numlist | ' +
+          'bold italic forecolor | alignleft aligncenter ' +
+          'alignright alignjustify | bullist numlist outdent indent | ' +
           'removeformat | image media | fullscreen markdown | help',
         placeholder: placeholder,
         images_upload_url: '/api/upload-image',
