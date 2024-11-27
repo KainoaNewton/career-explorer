@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
 import { RichTextEditor } from "./RichTextEditor";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const articleSchema = z.object({
   title: z.string().min(1, "Title is required").max(50, "Title must not exceed 50 characters"),
@@ -34,6 +34,31 @@ export const ArticleForm = () => {
     },
   });
 
+  // Load form data from localStorage on mount
+  useEffect(() => {
+    const savedFormData = localStorage.getItem('articleFormData');
+    const savedContent = localStorage.getItem('articleContent');
+    
+    if (savedFormData) {
+      form.reset(JSON.parse(savedFormData));
+    }
+    
+    if (savedContent) {
+      setContent(savedContent);
+    }
+  }, []);
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    const formData = form.getValues();
+    localStorage.setItem('articleFormData', JSON.stringify(formData));
+  }, [form.watch()]);
+
+  // Save content to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('articleContent', content);
+  }, [content]);
+
   const onSubmit = async (values: z.infer<typeof articleSchema>) => {
     try {
       const { error } = await supabase.from("articles").insert([{
@@ -47,6 +72,9 @@ export const ArticleForm = () => {
       });
       form.reset();
       setContent("");
+      // Clear localStorage after successful submission
+      localStorage.removeItem('articleFormData');
+      localStorage.removeItem('articleContent');
     } catch (error: any) {
       toast({
         title: "Error",

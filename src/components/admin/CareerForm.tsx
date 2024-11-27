@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { FormFields, careerSchema } from "./career-form/FormFields";
@@ -27,6 +27,40 @@ export function CareerForm() {
       salaryMax: "",
     },
   });
+
+  // Load form data from localStorage on mount
+  useEffect(() => {
+    const savedFormData = localStorage.getItem('careerFormData');
+    const savedTasks = localStorage.getItem('careerDailyTasks');
+    const savedSkills = localStorage.getItem('careerRequiredSkills');
+    
+    if (savedFormData) {
+      form.reset(JSON.parse(savedFormData));
+    }
+    
+    if (savedTasks) {
+      setDailyTasks(JSON.parse(savedTasks));
+    }
+    
+    if (savedSkills) {
+      setRequiredSkills(JSON.parse(savedSkills));
+    }
+  }, []);
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    const formData = form.getValues();
+    localStorage.setItem('careerFormData', JSON.stringify(formData));
+  }, [form.watch()]);
+
+  // Save tasks and skills to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('careerDailyTasks', JSON.stringify(dailyTasks));
+  }, [dailyTasks]);
+
+  useEffect(() => {
+    localStorage.setItem('careerRequiredSkills', JSON.stringify(requiredSkills));
+  }, [requiredSkills]);
 
   const addTask = () => {
     if (newTask.trim()) {
@@ -69,6 +103,10 @@ export function CareerForm() {
       form.reset();
       setDailyTasks([]);
       setRequiredSkills([]);
+      // Clear localStorage after successful submission
+      localStorage.removeItem('careerFormData');
+      localStorage.removeItem('careerDailyTasks');
+      localStorage.removeItem('careerRequiredSkills');
     } catch (error: any) {
       toast({
         title: "Error",

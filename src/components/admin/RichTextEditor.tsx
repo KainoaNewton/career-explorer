@@ -25,10 +25,9 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
           'imagetools'
         ],
         toolbar: 'undo redo | blocks | ' +
-          'bold italic forecolor | ' +
-          'bullist numlist | ' +
+          'bold italic forecolor | bullist numlist | ' +
           'removeformat | image media | fullscreen markdown | help',
-        placeholder: placeholder || 'Paste or write your article here...',
+        placeholder: placeholder || 'Paste or write your article content here...',
         images_upload_url: '/api/upload-image',
         automatic_uploads: true,
         autosave_interval: '30s',
