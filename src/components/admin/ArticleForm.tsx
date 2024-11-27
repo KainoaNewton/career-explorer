@@ -12,7 +12,7 @@ import { RichTextEditor } from "./RichTextEditor";
 import { useState } from "react";
 
 const articleSchema = z.object({
-  title: z.string().min(1, "Title is required").max(40, "Title must not exceed 40 characters"),
+  title: z.string().min(1, "Title is required").max(50, "Title must not exceed 50 characters"),
   excerpt: z.string().min(1, "Excerpt is required").max(130, "Excerpt must not exceed 130 characters"),
   category: z.string().min(1, "Category is required").max(16, "Category must not exceed 16 characters"),
   slug: z.string().min(1, "URL is required"),
@@ -22,7 +22,7 @@ const articleSchema = z.object({
 export const ArticleForm = () => {
   const { toast } = useToast();
   const [content, setContent] = useState("");
-  
+
   const form = useForm({
     resolver: zodResolver(articleSchema),
     defaultValues: {
@@ -64,13 +64,13 @@ export const ArticleForm = () => {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Title</FormLabel>
+              <FormLabel className="text-white">Title (max 50 characters)</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="e.g. 10 Tips for Career Success" 
-                  className="bg-spotify-black text-white border-spotify-lightgray" 
-                  maxLength={40}
-                  {...field} 
+                <Input
+                  placeholder="e.g. 10 Tips for Career Success"
+                  className="bg-spotify-black text-white border-spotify-lightgray"
+                  maxLength={50}
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -84,11 +84,11 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Excerpt (max 130 characters)</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="A brief summary that will appear in the article list" 
-                  className="bg-spotify-black text-white border-spotify-lightgray" 
+                <Textarea
+                  placeholder="A brief summary that will appear in the article list"
+                  className="bg-spotify-black text-white border-spotify-lightgray"
                   maxLength={130}
-                  {...field} 
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -102,11 +102,11 @@ export const ArticleForm = () => {
             <FormItem>
               <FormLabel className="text-white">Category (max 16 characters)</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="e.g. Career Advice" 
-                  className="bg-spotify-black text-white border-spotify-lightgray" 
+                <Input
+                  placeholder="e.g. Career Advice"
+                  className="bg-spotify-black text-white border-spotify-lightgray"
                   maxLength={16}
-                  {...field} 
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -142,9 +142,9 @@ export const ArticleForm = () => {
 
         <FormItem>
           <FormLabel className="text-white">Article Content</FormLabel>
-          <RichTextEditor 
-            content={content} 
-            onChange={setContent} 
+          <RichTextEditor
+            content={content}
+            onChange={setContent}
             placeholder="Write your article content here..."
           />
         </FormItem>
