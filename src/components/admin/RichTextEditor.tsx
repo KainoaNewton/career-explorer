@@ -20,13 +20,20 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
         plugins: [
           'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
           'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-          'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+          'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
+          'markdown', 'powerpaste', 'fullscreen', 'media', 'autosave', 'image',
+          'imagetools'
         ],
         toolbar: 'undo redo | blocks | ' +
           'bold italic forecolor | alignleft aligncenter ' +
           'alignright alignjustify | bullist numlist outdent indent | ' +
-          'removeformat | help',
+          'removeformat | image media | fullscreen markdown | help',
         placeholder: placeholder,
+        images_upload_url: '/api/upload-image',
+        automatic_uploads: true,
+        autosave_interval: '30s',
+        autosave_prefix: 'tinymce-autosave-{path}{query}-',
+        autosave_restore_when_empty: true,
         content_style: `
           body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
