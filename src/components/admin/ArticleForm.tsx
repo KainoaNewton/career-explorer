@@ -22,6 +22,7 @@ const articleSchema = z.object({
 export const ArticleForm = () => {
   const { toast } = useToast();
   const [content, setContent] = useState("");
+  const [isUnloading, setIsUnloading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(articleSchema),
@@ -39,24 +40,51 @@ export const ArticleForm = () => {
     const savedFormData = localStorage.getItem('articleFormData');
     const savedContent = localStorage.getItem('articleContent');
 
-    if (savedFormData) {
+    if (savedFormData && !isUnloading) {
       form.reset(JSON.parse(savedFormData));
     }
 
-    if (savedContent) {
+    if (savedContent && !isUnloading) {
       setContent(savedContent);
     }
   }, []);
 
   // Save form data to localStorage whenever it changes
   useEffect(() => {
-    const formData = form.getValues();
-    localStorage.setItem('articleFormData', JSON.stringify(formData));
+    if (!isUnloading) {
+      const formData = form.getValues();
+      localStorage.setItem('articleFormData', JSON.stringify(formData));
+    }
   }, [form.watch()]);
 
   // Save content to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('articleContent', content);
+    if (!isUnloading) {
+      localStorage.setItem('articleContent', content);
+    }
+  }, [content]);
+
+  // Handle beforeunload event
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const formData = form.getValues();
+      const hasUnsavedChanges = 
+        Object.values(formData).some(value => value !== "") || 
+        content !== "";
+
+      if (hasUnsavedChanges) {
+        setIsUnloading(true);
+        localStorage.removeItem('articleFormData');
+        localStorage.removeItem('articleContent');
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [content]);
 
   const onSubmit = async (values: z.infer<typeof articleSchema>) => {
@@ -72,7 +100,6 @@ export const ArticleForm = () => {
       });
       form.reset();
       setContent("");
-      // Clear localStorage after successful submission
       localStorage.removeItem('articleFormData');
       localStorage.removeItem('articleContent');
     } catch (error: any) {
