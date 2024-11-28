@@ -67,11 +67,11 @@ const Article = () => {
               </div>
             </div>
             
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
+            <h1 className="article-title">
               {article.title}
             </h1>
             
-            <p className="text-lg text-white/80 leading-relaxed">
+            <p className="article-excerpt">
               {article.excerpt}
             </p>
             
