@@ -15,25 +15,36 @@ export function ManageFeatured() {
 
   const toggleFeatured = async (id: string, currentValue: boolean) => {
     try {
-      // Log the update attempt
-      console.log('Updating career:', id, 'to featured:', !currentValue);
-      
+      // First, update the UI optimistically
+      queryClient.setQueryData(['careers'], (oldData: any) => {
+        return oldData?.map((career: any) =>
+          career.id === id ? { ...career, featured: !currentValue } : career
+        );
+      });
+
+      // Then perform the actual update
       const { data, error } = await supabase
         .from('careers')
-        .update({ featured: !currentValue })
+        .update({
+          featured: !currentValue
+        })
         .eq('id', id)
-        .select();
+        .select('*')
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        // If there's an error, revert the optimistic update
+        queryClient.invalidateQueries({ queryKey: ['careers'] });
+        throw error;
+      }
 
-      console.log('Update response:', data);
-
-      // Invalidate and refetch
-      await queryClient.invalidateQueries({ queryKey: ['careers'] });
-      
+      // Show success message
       toast({
         title: `Career ${!currentValue ? 'added to' : 'removed from'} featured section`,
       });
+
+      // Refresh the data to ensure consistency
+      await queryClient.invalidateQueries({ queryKey: ['careers'] });
     } catch (error: any) {
       console.error('Error updating featured status:', error);
       toast({
@@ -58,7 +69,7 @@ export function ManageFeatured() {
               <p className="text-sm text-gray-400">{career.category}</p>
             </div>
             <Switch
-              checked={Boolean(career.featured)}
+              checked={career.featured || false}
               onCheckedChange={() => toggleFeatured(career.id, Boolean(career.featured))}
             />
           </div>
