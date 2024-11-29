@@ -15,12 +15,18 @@ export function ManageFeatured() {
 
   const toggleFeatured = async (id: string, currentValue: boolean) => {
     try {
-      const { error } = await supabase
+      // Log the update attempt
+      console.log('Updating career:', id, 'to featured:', !currentValue);
+      
+      const { data, error } = await supabase
         .from('careers')
         .update({ featured: !currentValue })
-        .eq('id', id);
+        .eq('id', id)
+        .select();
 
       if (error) throw error;
+
+      console.log('Update response:', data);
 
       // Invalidate and refetch
       await queryClient.invalidateQueries({ queryKey: ['careers'] });
@@ -29,6 +35,7 @@ export function ManageFeatured() {
         title: `Career ${!currentValue ? 'added to' : 'removed from'} featured section`,
       });
     } catch (error: any) {
+      console.error('Error updating featured status:', error);
       toast({
         title: "Error updating featured status",
         description: error.message,
