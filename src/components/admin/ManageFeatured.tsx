@@ -22,15 +22,11 @@ export function ManageFeatured() {
         );
       });
 
-      // Then perform the actual update
-      const { data, error } = await supabase
+      // Perform the update without .select() to avoid CORS issues
+      const { error } = await supabase
         .from('careers')
-        .update({
-          featured: !currentValue
-        })
-        .eq('id', id)
-        .select('*')
-        .single();
+        .update({ featured: !currentValue })
+        .eq('id', id);
 
       if (error) {
         // If there's an error, revert the optimistic update
