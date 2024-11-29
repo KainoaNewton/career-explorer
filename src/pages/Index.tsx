@@ -16,10 +16,7 @@ const Index = () => {
 
   const { data: careers, isLoading: careersLoading } = useQuery({
     queryKey: ['careers'],
-    queryFn: async () => {
-      const allCareers = await getCareers();
-      return allCareers.filter(career => career.featured);
-    }
+    queryFn: getCareers
   });
 
   const { data: articles, isLoading: articlesLoading } = useQuery({
