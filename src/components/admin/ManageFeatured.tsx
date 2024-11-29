@@ -22,7 +22,8 @@ export function ManageFeatured() {
 
       if (error) throw error;
 
-      queryClient.invalidateQueries({ queryKey: ['careers'] });
+      // Invalidate and refetch
+      await queryClient.invalidateQueries({ queryKey: ['careers'] });
       
       toast({
         title: `Career ${!currentValue ? 'added to' : 'removed from'} featured section`,
@@ -50,8 +51,8 @@ export function ManageFeatured() {
               <p className="text-sm text-gray-400">{career.category}</p>
             </div>
             <Switch
-              checked={career.featured || false}
-              onCheckedChange={() => toggleFeatured(career.id, career.featured || false)}
+              checked={Boolean(career.featured)}
+              onCheckedChange={() => toggleFeatured(career.id, Boolean(career.featured))}
             />
           </div>
         ))}
