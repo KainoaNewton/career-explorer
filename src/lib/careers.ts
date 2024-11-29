@@ -12,6 +12,7 @@ export interface Career {
   requiredSkills: string[];
   salaryMin?: string;
   salaryMax?: string;
+  featured?: boolean;  // Added this line
 }
 
 export const categories = [
