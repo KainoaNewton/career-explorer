@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCareers } from "@/lib/careers";
-import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/components/ui/use-toast";
 
@@ -46,7 +46,7 @@ export function ManageFeatured() {
               <h3 className="font-medium text-white">{career.title}</h3>
               <p className="text-sm text-gray-400">{career.category}</p>
             </div>
-            <Switch
+            <Checkbox
               checked={career.featured || false}
               onCheckedChange={() => toggleFeatured(career.id, career.featured || false)}
             />
