@@ -29,7 +29,7 @@ const Index = () => {
   };
 
   const handleCategoryClick = (categoryId: string) => {
-    navigate(`/search?category=${categoryId}`);
+    navigate(`/search?categories=${categoryId}`);
   };
 
   // Ensure dailyTasks and requiredSkills are arrays
