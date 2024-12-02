@@ -12,36 +12,15 @@ export function ManageFeatured() {
   });
 
   const toggleFeatured = async (id: string, currentValue: boolean) => {
-    console.log('Attempting to toggle featured status:', { id, currentValue });
-    
     try {
-      // First, verify the career exists
-      const { data: existingCareer, error: fetchError } = await supabase
-        .from('careers')
-        .select('id, featured')
-        .eq('id', id)
-        .single();
-
-      if (fetchError) {
-        console.error('Error fetching career:', fetchError);
-        throw new Error('Failed to verify career exists');
-      }
-
-      if (!existingCareer) {
-        console.error('Career not found:', id);
-        throw new Error('Career not found');
-      }
-
-      console.log('Current career state:', existingCareer);
-
-      // Perform the update
       const newValue = !currentValue;
-      console.log('Updating featured status to:', newValue);
       
       const { error: updateError } = await supabase
         .from('careers')
         .update({ featured: newValue })
-        .eq('id', id);
+        .eq('id', id)
+        .select()
+        .single();
 
       if (updateError) {
         console.error('Error updating career:', updateError);
@@ -51,7 +30,6 @@ export function ManageFeatured() {
       // Invalidate and refetch
       await queryClient.invalidateQueries({ queryKey: ['careers'] });
       
-      console.log('Successfully updated featured status');
       toast({
         title: "Success",
         description: `Career ${newValue ? 'featured' : 'unfeatured'} successfully`,
@@ -66,15 +44,11 @@ export function ManageFeatured() {
     }
   };
 
-  // Handle initial loading state
   if (isLoading) {
-    console.log('Loading careers...');
     return <div>Loading careers...</div>;
   }
 
-  // Handle error state
   if (error) {
-    console.error('Error loading careers:', error);
     return (
       <div className="text-red-500">
         Error loading careers: {error instanceof Error ? error.message : 'Unknown error'}
@@ -82,13 +56,9 @@ export function ManageFeatured() {
     );
   }
 
-  // Handle no careers state
   if (!careers || careers.length === 0) {
-    console.log('No careers found');
     return <div>No careers available.</div>;
   }
-
-  console.log('Rendering careers:', careers);
 
   return (
     <div className="space-y-4">
