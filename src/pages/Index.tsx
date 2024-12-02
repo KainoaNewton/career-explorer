@@ -32,18 +32,8 @@ const Index = () => {
     navigate(`/search?categories=${categoryId}`);
   };
 
-  // Ensure dailyTasks and requiredSkills are arrays
-  const parsedDailyTasks = selectedCareer?.dailyTasks 
-    ? Array.isArray(selectedCareer.dailyTasks) 
-      ? selectedCareer.dailyTasks 
-      : JSON.parse(selectedCareer.dailyTasks as string)
-    : [];
-
-  const parsedRequiredSkills = selectedCareer?.requiredSkills
-    ? Array.isArray(selectedCareer.requiredSkills)
-      ? selectedCareer.requiredSkills
-      : JSON.parse(selectedCareer.requiredSkills as string)
-    : [];
+  // Get featured careers
+  const featuredCareers = careers?.filter(career => career.featured) || [];
 
   // Get only the 3 latest articles
   const latestArticles = articles ? articles.slice(0, 3) : [];
@@ -90,11 +80,11 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Careers Grid */}
+        {/* Featured Careers Grid */}
         <section>
           <h2 className="text-2xl font-bold mb-6">Featured Careers</h2>
           <CareerGrid
-            careers={careers || []}
+            careers={featuredCareers}
             isLoading={careersLoading}
             onCareerClick={handleCareerClick}
           />
@@ -139,7 +129,7 @@ const Index = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Daily Tasks</h3>
                     <ul className="list-disc pl-5 text-spotify-lightgray">
-                      {parsedDailyTasks.map((task: string, index: number) => (
+                      {selectedCareer.dailyTasks.map((task: string, index: number) => (
                         <li key={index}>{task}</li>
                       ))}
                     </ul>
@@ -148,7 +138,7 @@ const Index = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Required Skills</h3>
                     <div className="flex flex-wrap gap-2">
-                      {parsedRequiredSkills.map((skill: string, index: number) => (
+                      {selectedCareer.requiredSkills.map((skill: string, index: number) => (
                         <span
                           key={index}
                           className="bg-spotify-green/20 text-spotify-green px-3 py-1 rounded-full text-sm"

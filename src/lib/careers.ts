@@ -12,6 +12,7 @@ export interface Career {
   requiredSkills: string[];
   salaryMin?: string;
   salaryMax?: string;
+  featured?: boolean;
 }
 
 export const categories = [
@@ -120,3 +121,4 @@ export async function deleteCareer(id: string) {
     throw error;
   }
 }
+
