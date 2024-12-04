@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdminAuth } from "../components/AdminAuth";
-import { CareerForm } from "../components/CareerForm";
-import { ArticleForm } from "../components/ArticleForm";
-import ManageArticles from "../components/ManageArticles";
-import ManageCareers from "../components/ManageCareers";
-import ManageFeatured from "../components/ManageFeatured";
+import { AdminAuth } from "@/components/admin/AdminAuth";
+import { CareerForm } from "@/components/admin/CareerForm";
+import { ArticleForm } from "@/components/admin/ArticleForm";
+import { ManageArticles } from "@/components/admin/ManageArticles";
+import { ManageCareers } from "@/components/admin/ManageCareers";
+import { ManageFeatured } from "@/components/admin/ManageFeatured";
 import { supabase } from "@/lib/supabase";
 
 const Admin = () => {
