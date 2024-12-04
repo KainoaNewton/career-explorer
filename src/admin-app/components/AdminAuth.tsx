@@ -11,7 +11,7 @@ const AdminAuth = ({ onAuthenticated }) => {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signIn({ email });
+    const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
       setError(error.message);

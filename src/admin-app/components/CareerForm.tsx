@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormControl, FormDescription, FormLabel, FormMessage } from "@/components/ui/form";
-import { RichTextEditor } from "./RichTextEditor";
+import RichTextEditor from "./RichTextEditor";
 
 const CareerForm = () => {
   const { control, handleSubmit, formState: { errors } } = useForm();
@@ -26,9 +26,11 @@ const CareerForm = () => {
                 className="input"
                 placeholder="Enter title"
               />
-              <FormMessage>
-                {errors.title?.message}
-              </FormMessage>
+              {errors.title && (
+                <FormMessage>
+                  {errors.title.message as string}
+                </FormMessage>
+              )}
             </FormControl>
           )}
         />
@@ -43,9 +45,11 @@ const CareerForm = () => {
           render={({ field }) => (
             <FormControl>
               <RichTextEditor {...field} />
-              <FormMessage>
-                {errors.description?.message}
-              </FormMessage>
+              {errors.description && (
+                <FormMessage>
+                  {errors.description.message as string}
+                </FormMessage>
+              )}
             </FormControl>
           )}
         />

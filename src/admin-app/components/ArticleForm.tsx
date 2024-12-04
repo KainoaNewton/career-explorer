@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-import { RichTextEditor } from "./RichTextEditor";
+import RichTextEditor from "./RichTextEditor";
 
 const ArticleForm = () => {
   const [title, setTitle] = useState("");

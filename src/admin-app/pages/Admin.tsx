@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminAuth } from "../components/AdminAuth";
 import { CareerForm } from "../components/CareerForm";
 import { ArticleForm } from "../components/ArticleForm";
-import { ManageArticles } from "../components/ManageArticles";
-import { ManageCareers } from "../components/ManageCareers";
-import { ManageFeatured } from "../components/ManageFeatured";
+import ManageArticles from "../components/ManageArticles";
+import ManageCareers from "../components/ManageCareers";
+import ManageFeatured from "../components/ManageFeatured";
 import { supabase } from "@/lib/supabase";
 
 const Admin = () => {

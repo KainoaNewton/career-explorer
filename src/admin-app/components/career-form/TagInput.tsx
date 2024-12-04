@@ -8,7 +8,7 @@ interface TagInputProps {
 const TagInput: React.FC<TagInputProps> = ({ tags, setTags }) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleAddTag = (e: ReactKeyboardEvent) => {
+  const handleAddTag = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && inputValue) {
       setTags([...tags, inputValue]);
       setInputValue("");
