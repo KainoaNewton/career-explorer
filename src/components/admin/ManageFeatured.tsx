@@ -15,20 +15,19 @@ export function ManageFeatured() {
     try {
       console.log('Toggling featured status:', { id, currentValue });
       
-      const { data, error: updateError } = await supabase
+      const { error: updateError } = await supabase
         .from('careers')
         .update({ featured: !currentValue })
-        .eq('id', id);
+        .eq('id', id)
+        .select('*');
 
       if (updateError) {
         console.error('Error updating career:', updateError);
         throw updateError;
       }
 
-      console.log('Update response:', data);
-
-      // Invalidate and refetch
-      await queryClient.invalidateQueries({ queryKey: ['careers'] });
+      // Immediately invalidate the cache to trigger a refetch
+      queryClient.invalidateQueries({ queryKey: ['careers'] });
       
       toast({
         title: "Success",
