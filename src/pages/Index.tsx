@@ -106,7 +106,7 @@ const Index = () => {
         </section>
 
         {/* Career Detail Dialog */}
-        <Dialog open={!!selectedCareer} onOpenChange={() => setSelectedCareer(null)}>
+        <Dialog open={!!selectedCareer} onOpenChange={(open) => !open && setSelectedCareer(null)}>
           <DialogContent className="bg-spotify-darkgray text-white border-none max-w-2xl">
             {selectedCareer && (
               <div className="space-y-6">
@@ -129,7 +129,7 @@ const Index = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Daily Tasks</h3>
                     <ul className="list-disc pl-5 text-spotify-lightgray">
-                      {selectedCareer.dailyTasks.map((task: string, index: number) => (
+                      {selectedCareer.dailyTasks.map((task, index) => (
                         <li key={index}>{task}</li>
                       ))}
                     </ul>
@@ -138,7 +138,7 @@ const Index = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Required Skills</h3>
                     <div className="flex flex-wrap gap-2">
-                      {selectedCareer.requiredSkills.map((skill: string, index: number) => (
+                      {selectedCareer.requiredSkills.map((skill, index) => (
                         <span
                           key={index}
                           className="bg-spotify-green/20 text-spotify-green px-3 py-1 rounded-full text-sm"
