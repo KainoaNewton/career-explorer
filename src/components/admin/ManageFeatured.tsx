@@ -15,21 +15,32 @@ export function ManageFeatured() {
     try {
       console.log('Toggling featured status:', { id, currentValue });
       
-      const { data, error: updateError } = await supabase
+      // First update the record
+      const { error: updateError } = await supabase
         .from('careers')
         .update({ featured: !currentValue })
-        .eq('id', id)
-        .select()
-        .single();
+        .eq('id', id);
 
       if (updateError) {
         console.error('Error updating career:', updateError);
         throw updateError;
       }
 
-      console.log('Update response:', data);
+      // Then fetch the updated record to confirm
+      const { data: updatedCareer, error: fetchError } = await supabase
+        .from('careers')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-      // Wait for the query invalidation
+      if (fetchError) {
+        console.error('Error fetching updated career:', fetchError);
+        throw fetchError;
+      }
+
+      console.log('Updated career:', updatedCareer);
+
+      // Invalidate and refetch
       await queryClient.invalidateQueries({ queryKey: ['careers'] });
       
       toast({
