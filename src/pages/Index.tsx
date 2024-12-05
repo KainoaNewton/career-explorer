@@ -25,7 +25,21 @@ const Index = () => {
   });
 
   const handleCareerClick = (career: Career) => {
-    setSelectedCareer(career);
+    // Ensure dailyTasks and requiredSkills are arrays
+    const parsedCareer = {
+      ...career,
+      dailyTasks: Array.isArray(career.dailyTasks) 
+        ? career.dailyTasks 
+        : typeof career.dailyTasks === 'string' 
+          ? JSON.parse(career.dailyTasks) 
+          : [],
+      requiredSkills: Array.isArray(career.requiredSkills)
+        ? career.requiredSkills
+        : typeof career.requiredSkills === 'string'
+          ? JSON.parse(career.requiredSkills)
+          : []
+    };
+    setSelectedCareer(parsedCareer);
   };
 
   const handleCategoryClick = (categoryId: string) => {
