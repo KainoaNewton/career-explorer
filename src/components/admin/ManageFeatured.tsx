@@ -13,26 +13,26 @@ export function ManageFeatured() {
 
   const toggleFeatured = async (id: string, currentValue: boolean) => {
     try {
-      const newValue = !currentValue;
+      console.log('Toggling featured status:', { id, currentValue });
       
-      const { error: updateError } = await supabase
+      const { data, error: updateError } = await supabase
         .from('careers')
-        .update({ featured: newValue })
-        .eq('id', id)
-        .select()
-        .single();
+        .update({ featured: !currentValue })
+        .eq('id', id);
 
       if (updateError) {
         console.error('Error updating career:', updateError);
         throw updateError;
       }
 
+      console.log('Update response:', data);
+
       // Invalidate and refetch
       await queryClient.invalidateQueries({ queryKey: ['careers'] });
       
       toast({
         title: "Success",
-        description: `Career ${newValue ? 'featured' : 'unfeatured'} successfully`,
+        description: `Career ${!currentValue ? 'featured' : 'unfeatured'} successfully`,
       });
     } catch (error) {
       console.error('Error in toggleFeatured:', error);
