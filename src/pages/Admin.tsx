@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminAuth } from "@/components/admin/AdminAuth";
@@ -13,7 +12,6 @@ import { supabase } from "@/lib/supabase";
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -66,7 +64,7 @@ const Admin = () => {
             </Button>
             <Button
               variant="outline"
-              onClick={() => navigate("/")}
+              onClick={() => window.location.href = "https://careerexplorer.vercel.app/"}
               className="bg-spotify-darkgray text-white hover:bg-spotify-darkgray/90 border-spotify-lightgray"
             >
               Back to Home
