@@ -7,7 +7,6 @@ import { CareerForm } from "@/components/admin/CareerForm";
 import { ArticleForm } from "@/components/admin/ArticleForm";
 import { ManageArticles } from "@/components/admin/ManageArticles";
 import { ManageCareers } from "@/components/admin/ManageCareers";
-import { ManageFeatured } from "@/components/admin/ManageFeatured";
 import { supabase } from "@/lib/supabase";
 
 const Admin = () => {
@@ -75,15 +74,12 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="add-career" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-spotify-darkgray">
+          <TabsList className="grid w-full grid-cols-4 bg-spotify-darkgray">
             <TabsTrigger value="add-career" className="text-white data-[state=active]:bg-spotify-green">
               Add Career
             </TabsTrigger>
             <TabsTrigger value="manage-careers" className="text-white data-[state=active]:bg-spotify-green">
               Manage Careers
-            </TabsTrigger>
-            <TabsTrigger value="featured-careers" className="text-white data-[state=active]:bg-spotify-green">
-              Featured Careers
             </TabsTrigger>
             <TabsTrigger value="add-article" className="text-white data-[state=active]:bg-spotify-green">
               Add Article
@@ -99,10 +95,6 @@ const Admin = () => {
 
           <TabsContent value="manage-careers" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
             <ManageCareers />
-          </TabsContent>
-
-          <TabsContent value="featured-careers" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
-            <ManageFeatured />
           </TabsContent>
 
           <TabsContent value="add-article" className="bg-spotify-darkgray p-6 rounded-lg mt-4">

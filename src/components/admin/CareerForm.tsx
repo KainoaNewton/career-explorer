@@ -84,6 +84,17 @@ export function CareerForm() {
     setRequiredSkills(requiredSkills.filter((_, i) => i !== index));
   };
 
+  const clearForm = () => {
+    form.reset();
+    setDailyTasks([]);
+    setRequiredSkills([]);
+    setNewTask("");
+    setNewSkill("");
+    localStorage.removeItem('careerFormData');
+    localStorage.removeItem('careerDailyTasks');
+    localStorage.removeItem('careerRequiredSkills');
+  };
+
   const onSubmit = async (values: z.infer<typeof careerSchema>) => {
     try {
       const { error } = await supabase.from("careers").insert([{
@@ -91,22 +102,19 @@ export function CareerForm() {
         yearsOfEducation: parseInt(values.yearsOfEducation),
         dailyTasks,
         requiredSkills,
+        created_at: new Date().toISOString(),
         averageSalary: values.salaryMax ? `$${Math.floor((parseInt(values.salaryMin || "0") + parseInt(values.salaryMax)) / 2).toLocaleString()}` : "Not specified"
       }]);
 
       if (error) throw error;
 
       toast({
-        title: "Career added successfully",
+        title: "Success!",
+        description: "Career added successfully",
+        variant: "default",
       });
 
-      form.reset();
-      setDailyTasks([]);
-      setRequiredSkills([]);
-      // Clear localStorage after successful submission
-      localStorage.removeItem('careerFormData');
-      localStorage.removeItem('careerDailyTasks');
-      localStorage.removeItem('careerRequiredSkills');
+      clearForm();
     } catch (error: any) {
       toast({
         title: "Error",

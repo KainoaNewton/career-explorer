@@ -87,6 +87,13 @@ export const ArticleForm = () => {
     };
   }, [content]);
 
+  const clearForm = () => {
+    form.reset();
+    setContent("");
+    localStorage.removeItem('articleFormData');
+    localStorage.removeItem('articleContent');
+  };
+
   const onSubmit = async (values: z.infer<typeof articleSchema>) => {
     try {
       const { error } = await supabase.from("articles").insert([{
@@ -94,14 +101,16 @@ export const ArticleForm = () => {
         content,
         date: new Date().toISOString(),
       }]);
+      
       if (error) throw error;
+      
       toast({
-        title: "Article added successfully",
+        title: "Success!",
+        description: "Article added successfully",
+        variant: "default",
       });
-      form.reset();
-      setContent("");
-      localStorage.removeItem('articleFormData');
-      localStorage.removeItem('articleContent');
+      
+      clearForm();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -214,4 +223,3 @@ export const ArticleForm = () => {
       </form>
     </Form>
   );
-};
