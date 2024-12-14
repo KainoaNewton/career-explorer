@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { RichTextEditor } from "./RichTextEditor";
 import { useState, useEffect } from "react";
@@ -96,7 +96,9 @@ export const ArticleForm = () => {
       }]);
       if (error) throw error;
       toast({
-        title: "Article added successfully",
+        title: "Success!",
+        description: "Article added successfully",
+        variant: "default",
       });
       form.reset();
       setContent("");
