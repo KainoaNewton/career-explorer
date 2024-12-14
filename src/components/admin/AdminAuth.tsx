@@ -81,7 +81,7 @@ export const AdminAuth = ({ onAuthenticated }: AdminAuthProps) => {
         <Button
           variant="outline"
           className="w-full bg-spotify-darkgray text-white hover:bg-spotify-darkgray/90 border-spotify-lightgray"
-          onClick={() => window.location.href = "https://careerexplorer.vercel.app/"}
+          onClick={() => navigate("/")}
         >
           <Home className="mr-2 h-4 w-4" />
           Back to Home

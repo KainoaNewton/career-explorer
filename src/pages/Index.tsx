@@ -1,157 +1,173 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdminAuth } from "@/components/admin/AdminAuth";
-import { CareerForm } from "@/components/admin/CareerForm";
-import { ArticleForm } from "@/components/admin/ArticleForm";
-import { ManageArticles } from "@/components/admin/ManageArticles";
-import { ManageCareers } from "@/components/admin/ManageCareers";
-import { supabase } from "@/lib/supabase";
-import { CategoryCard } from "@/components/CategoryCard";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { categories } from "@/lib/careers";
+import { CategoryCard } from "@/components/CategoryCard";
+import { CareerGrid } from "@/components/CareerGrid";
+import { ArticleGrid } from "@/components/ArticleGrid";
+import { categories, getCareers, Career } from "@/lib/careers";
+import { getArticles } from "@/lib/articles";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [careers, setCareers] = useState([]);
+  const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setIsAuthenticated(!!session);
-      } catch (error) {
-        console.error('Error checking session:', error);
-      } finally {
-        setIsLoading(false);
-      }
+  const { data: careers, isLoading: careersLoading } = useQuery({
+    queryKey: ['careers'],
+    queryFn: getCareers
+  });
+
+  const { data: articles, isLoading: articlesLoading } = useQuery({
+    queryKey: ['articles'],
+    queryFn: getArticles
+  });
+
+  const handleCareerClick = (career: Career) => {
+    // Ensure dailyTasks and requiredSkills are arrays
+    const parsedCareer = {
+      ...career,
+      dailyTasks: Array.isArray(career.dailyTasks) 
+        ? career.dailyTasks 
+        : typeof career.dailyTasks === 'string' 
+          ? JSON.parse(career.dailyTasks) 
+          : [],
+      requiredSkills: Array.isArray(career.requiredSkills)
+        ? career.requiredSkills
+        : typeof career.requiredSkills === 'string'
+          ? JSON.parse(career.requiredSkills)
+          : []
     };
+    setSelectedCareer(parsedCareer);
+  };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
-    });
+  const handleCategoryClick = (categoryId: string) => {
+    navigate(`/search?categories=${categoryId}`);
+  };
 
-    checkSession();
+  // Get featured careers
+  const featuredCareers = careers?.filter(career => career.featured) || [];
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  // Get only the 3 latest articles
+  const latestArticles = articles ? articles.slice(0, 3) : [];
 
-  useEffect(() => {
-    const fetchCareers = async () => {
-      const { data, error } = await supabase.from("careers").select("*");
-      if (error) {
-        console.error("Error fetching careers:", error);
-      } else {
-        setCareers(data);
-      }
-    };
-
-    fetchCareers();
-  }, []);
-
-  if (isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-spotify-black p-8">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <h1 className="text-3xl font-bold text-white">Latest Careers</h1>
-          <ul className="space-y-4">
-            {careers.slice(-3).reverse().map((career) => (
-              <li key={career.id} className="bg-spotify-darkgray p-4 rounded-lg">
-                <h2 className="text-xl text-white">{career.title}</h2>
-                <p className="text-gray-400">{career.description}</p>
-              </li>
-            ))}
-          </ul>
-          <Tabs defaultValue="add-career" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 bg-spotify-darkgray">
-              <TabsTrigger value="add-career" className="text-white data-[state=active]:bg-spotify-green">
-                Add Career
-              </TabsTrigger>
-              <TabsTrigger value="manage-careers" className="text-white data-[state=active]:bg-spotify-green">
-                Manage Careers
-              </TabsTrigger>
-              <TabsTrigger value="add-article" className="text-white data-[state=active]:bg-spotify-green">
-                Add Article
-              </TabsTrigger>
-              <TabsTrigger value="manage-articles" className="text-white data-[state=active]:bg-spotify-green">
-                Manage Articles
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="add-career" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
-              <CareerForm />
-            </TabsContent>
-
-            <TabsContent value="manage-careers" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
-              <ManageCareers />
-            </TabsContent>
-
-            <TabsContent value="add-article" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
-              <ArticleForm />
-            </TabsContent>
-
-            <TabsContent value="manage-articles" className="bg-spotify-darkgray p-6 rounded-lg mt-4">
-              <ManageArticles />
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return <div className="min-h-screen bg-spotify-black flex items-center justify-center">
-      <div className="text-white">Loading...</div>
-    </div>;
-  }
-
-  // Main homepage content for non-authenticated users
   return (
-    <div className="min-h-screen bg-gradient-to-b from-spotify-black to-spotify-darkgray">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Discover Your Perfect Career Path
+    <div className="min-h-screen bg-spotify-black text-white p-6">
+      <main className="max-w-7xl mx-auto space-y-12">
+        {/* Hero Section */}
+        <div className="text-center space-y-6 py-12">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-spotify-green to-blue-500 bg-clip-text text-transparent">
+            Discover Your Career Path
           </h1>
-          <p className="text-xl text-spotify-lightgray mb-8 max-w-3xl mx-auto">
-            Explore different career paths, understand what it takes to succeed, and find the profession that matches your passion and skills.
+          <p className="text-xl text-spotify-lightgray max-w-2xl mx-auto">
+            Explore different careers, understand what it takes to succeed, and find your perfect profession.
           </p>
           <Button
             onClick={() => navigate("/search")}
-            className="bg-spotify-green hover:bg-spotify-green/90 text-white px-8 py-6 rounded-full text-lg"
+            className="relative inline-flex items-center px-8 py-8 text-lg font-semibold text-black bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 hover:from-pink-500 hover:to-yellow-400 rounded-xl shadow-[0_4px_20px_rgba(255,0,0,0.6)] transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-pink-400"
           >
-            Start Exploring
+            <span
+              className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 blur-md opacity-80 rounded-xl animate-pulse"
+              aria-hidden="true"
+            ></span>
+            <span className="relative z-10 flex items-center">
+              <Search className="mr-3 h-6 w-6 text-white" />
+              <span className="text-white">Explore Careers</span>
+            </span>
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {careers.slice(-3).reverse().map((career) => (
-            <div key={career.id} className="bg-spotify-darkgray p-6 rounded-lg hover:bg-spotify-darkgray/80 transition-colors">
-              <h3 className="text-xl font-semibold text-white mb-2">{career.title}</h3>
-              <p className="text-spotify-lightgray">{career.description}</p>
-            </div>
-          ))}
-        </div>
+        {/* Categories */}
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Browse by Category</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {categories.map((category) => (
+              <CategoryCard
+                key={category.id}
+                title={category.title}
+                description={category.description}
+                gradient={category.color}
+                onClick={() => handleCategoryClick(category.id)}
+              />
+            ))}
+          </div>
+        </section>
 
-        <h2 className="text-3xl font-bold text-white text-center mb-8">
-          Browse by Category
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              title={category.name}
-              description={category.description}
-              gradient={category.gradient}
-              onClick={() => navigate(`/search?category=${category.id}`)}
-            />
-          ))}
-        </div>
-      </div>
+        {/* Featured Careers Grid */}
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Featured Careers</h2>
+          <CareerGrid
+            careers={featuredCareers}
+            isLoading={careersLoading}
+            onCareerClick={handleCareerClick}
+          />
+        </section>
+
+        {/* Articles Section */}
+        <section>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Career Insights & Stories</h2>
+            <Button
+              variant="link"
+              className="text-spotify-green hover:text-white transition-colors"
+              onClick={() => navigate("/articles")}
+            >
+              View all articles
+            </Button>
+          </div>
+          <ArticleGrid articles={latestArticles} isLoading={articlesLoading} />
+        </section>
+
+        {/* Career Detail Dialog */}
+        <Dialog open={!!selectedCareer} onOpenChange={(open) => !open && setSelectedCareer(null)}>
+          <DialogContent className="bg-spotify-darkgray text-white border-none max-w-2xl">
+            {selectedCareer && (
+              <div className="space-y-6">
+                <h2 className="text-3xl font-bold">{selectedCareer.title}</h2>
+                <p className="text-spotify-lightgray">{selectedCareer.description}</p>
+                
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Education Required</h3>
+                    <p className="text-spotify-lightgray">
+                      {selectedCareer.yearsOfEducation} years of higher education
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Average Salary</h3>
+                    <p className="text-spotify-lightgray">{selectedCareer.averageSalary}</p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Daily Tasks</h3>
+                    <ul className="list-disc pl-5 text-spotify-lightgray">
+                      {selectedCareer.dailyTasks.map((task, index) => (
+                        <li key={index}>{task}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Required Skills</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCareer.requiredSkills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-spotify-green/20 text-spotify-green px-3 py-1 rounded-full text-sm"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+      </main>
     </div>
   );
 };

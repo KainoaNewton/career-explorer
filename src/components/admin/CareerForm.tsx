@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { FormFields, careerSchema } from "./career-form/FormFields";
 import { TagInput } from "./career-form/TagInput";
 import * as z from "zod";
@@ -97,18 +97,13 @@ export function CareerForm() {
       if (error) throw error;
 
       toast({
-        title: "Success!",
-        description: "Career added successfully",
-        variant: "default",
+        title: "Career added successfully",
       });
 
-      // Clear all form fields and states
       form.reset();
       setDailyTasks([]);
       setRequiredSkills([]);
-      setNewTask("");
-      setNewSkill("");
-      // Clear localStorage
+      // Clear localStorage after successful submission
       localStorage.removeItem('careerFormData');
       localStorage.removeItem('careerDailyTasks');
       localStorage.removeItem('careerRequiredSkills');
