@@ -25,7 +25,6 @@ const Index = () => {
   });
 
   const handleCareerClick = (career: Career) => {
-    // Ensure dailyTasks and requiredSkills are arrays
     const parsedCareer = {
       ...career,
       dailyTasks: Array.isArray(career.dailyTasks) 
@@ -46,8 +45,12 @@ const Index = () => {
     navigate(`/search?categories=${categoryId}`);
   };
 
-  // Get featured careers
-  const featuredCareers = careers?.filter(career => career.featured) || [];
+  // Get latest 3 careers
+  const latestCareers = careers ? [...careers].sort((a, b) => {
+    const dateA = a.created_at ? new Date(a.created_at) : new Date(0);
+    const dateB = b.created_at ? new Date(b.created_at) : new Date(0);
+    return dateB.getTime() - dateA.getTime();
+  }).slice(0, 3) : [];
 
   // Get only the 3 latest articles
   const latestArticles = articles ? articles.slice(0, 3) : [];
@@ -94,11 +97,11 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Featured Careers Grid */}
+        {/* Latest Careers Grid */}
         <section>
           <h2 className="text-2xl font-bold mb-6">Featured Careers</h2>
           <CareerGrid
-            careers={featuredCareers}
+            careers={latestCareers}
             isLoading={careersLoading}
             onCareerClick={handleCareerClick}
           />
